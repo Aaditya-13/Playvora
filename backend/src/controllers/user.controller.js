@@ -9,6 +9,8 @@ import {
 
     updateFavouriteSportsService,
 
+    updateAvatarService
+
 } from "../services/user.service.js";
 
 export const getCurrentUser =
@@ -73,6 +75,38 @@ asyncHandler(async (req, res) => {
             200,
             user,
             "Favourite sports updated."
+        )
+
+    );
+
+});
+
+
+
+
+
+export const updateAvatar =
+asyncHandler(async (req, res) => {
+
+    const user =
+        await updateAvatarService(
+
+            req.user._id,
+
+            req.file,
+
+        );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            user,
+
+            "Avatar updated successfully."
+
         )
 
     );

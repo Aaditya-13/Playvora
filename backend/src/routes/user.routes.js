@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import verifyJWT from "../middleware/auth.middleware.js";
 import validate from "../middleware/validate.middleware.js";
+import { upload } from "../middleware/multer.middleware.js";
 
 import {
 
@@ -54,6 +55,19 @@ router.patch(
     validate(updateFavouriteSportsSchema),
 
     updateFavouriteSports
+
+);
+
+
+router.patch(
+
+    "/avatar",
+
+    verifyJWT,
+
+    upload.single("avatar"),
+
+    updateAvatar
 
 );
 
