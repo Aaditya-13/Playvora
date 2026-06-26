@@ -1,8 +1,10 @@
 import ApiError from "../utils/ApiError.js";
 
-const validate = (schema) => {
+
+const validate = (schema, source = "body") => {
     return (req, res, next) => {
-        const result = schema.safeParse(req.body);
+
+        const result = schema.safeParse(req[source]);
 
         if (!result.success) {
             return next(
@@ -14,7 +16,8 @@ const validate = (schema) => {
             );
         }
 
-        req.body = result.data;
+        req.validated = req.validated || {};
+        req.validated[source] = result.data;
 
         next();
     };

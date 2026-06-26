@@ -35,10 +35,13 @@ app.get("/health", (req, res) => {
 
 //import routes
 import authRoutes from "./routes/auth.routes.js";
-
+import activityRoutes from "./routes/activity.routes.js";
 
 //routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/activities", activityRoutes);
+
+
 
 
 app.use(errorHandler);
