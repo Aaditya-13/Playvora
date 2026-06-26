@@ -26,13 +26,19 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
     res.status(200).json({
         success: true,
-        message: "PlayNear Backend Running 🚀",
+        message: "PlayNear Backend Running",
     });
 });
 
+//import routes
+import authRoutes from "./routes/auth.routes.js";
+
+
+//routes
+app.use("/api/v1/auth", authRoutes);
 
 
 app.use(errorHandler);
