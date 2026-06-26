@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import errorHandler from "./middleware/error.middleware.js";
 import env from "./config/env.js";
 
 const app = express();
@@ -33,4 +33,7 @@ app.get("/", (req, res) => {
     });
 });
 
+
+
+app.use(errorHandler);
 export default app;
