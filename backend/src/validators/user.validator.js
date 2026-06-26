@@ -25,3 +25,10 @@ export const updateFavouriteSportsSchema = z.object({
         .max(10),
 
 });
+
+
+export const searchSchema = z.object({
+
+    q: z.string().trim().min(1),
+
+});

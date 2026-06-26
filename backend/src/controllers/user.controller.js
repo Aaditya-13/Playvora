@@ -2,6 +2,18 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
 import {
+    getUserStatsService,
+} from "../services/statistics.service.js";
+
+import {
+  globalSearchService
+} from "../services/search.service.js"
+
+import { 
+  bootstrapService 
+} from "../services/bootstrap.service.js";
+
+import {
 
     getCurrentUserService,
 
@@ -106,6 +118,87 @@ asyncHandler(async (req, res) => {
             user,
 
             "Avatar updated successfully."
+
+        )
+
+    );
+
+});
+
+
+
+export const getUserStats =
+asyncHandler(async (req, res) => {
+
+    const stats =
+        await getUserStatsService(
+            req.user._id
+        );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            stats,
+
+            "Statistics fetched successfully."
+
+        )
+
+    );
+
+});
+
+
+
+
+export const globalSearch =
+asyncHandler(async (req, res) => {
+
+    const activities =
+        await globalSearchService(
+
+            req.validated.query.q
+
+        );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            activities,
+
+            "Search completed."
+
+        )
+
+    );
+
+});
+
+
+
+export const bootstrap =
+asyncHandler(async (req, res) => {
+
+    const data =
+        await bootstrapService(
+            req.user._id
+        );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            data,
+
+            "Bootstrap loaded."
 
         )
 

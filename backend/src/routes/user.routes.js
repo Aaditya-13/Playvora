@@ -3,6 +3,7 @@ import { Router } from "express";
 import verifyJWT from "../middleware/auth.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
+import { updateAvatar } from "../controllers/user.controller.js";
 
 import {
 
@@ -12,6 +13,12 @@ import {
 
     updateFavouriteSports,
 
+    getUserStats,
+
+    globalSearch,
+
+    bootstrap
+
 } from "../controllers/user.controller.js";
 
 import {
@@ -19,6 +26,8 @@ import {
     updateProfileSchema,
 
     updateFavouriteSportsSchema,
+
+    searchSchema
 
 } from "../validators/user.validator.js";
 
@@ -69,6 +78,27 @@ router.patch(
 
     updateAvatar
 
+);
+
+
+router.get(
+    "/me/stats",
+    verifyJWT,
+    getUserStats
+);
+
+
+router.get(
+    "/",
+    verifyJWT,
+    validate(searchSchema, "query"),
+    globalSearch
+);
+
+router.get(
+    "/",
+    verifyJWT,
+    bootstrap
 );
 
 export default router;
