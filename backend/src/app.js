@@ -37,13 +37,18 @@ app.get("/health", (req, res) => {
 import authRoutes from "./routes/auth.routes.js";
 import activityRoutes from "./routes/activity.routes.js";
 import joinRequestRoutes from "./routes/joinRequest.routes.js";
+import attendanceRoutes from "./routes/attendance.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 
 //routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/activities", activityRoutes);
 app.use("/api/v1/join-requests",joinRequestRoutes);
-
+app.use("/api/v1/attendance",attendanceRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 
 
