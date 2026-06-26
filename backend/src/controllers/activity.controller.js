@@ -8,6 +8,9 @@ import {
     getMyCreatedActivitiesService,
     getMyJoinedActivitiesService,
     updateActivityService,
+    leaveActivityService,
+    cancelActivityService,
+    deleteActivityService,
 } from "../services/activity.service.js";
 
 export const createActivity = asyncHandler(async (req, res) => {
@@ -109,6 +112,65 @@ export const updateActivity = asyncHandler(async (req, res) => {
             200,
             activity,
             "Activity updated successfully."
+        )
+    );
+});
+
+
+
+
+export const leaveActivity = asyncHandler(async (req, res) => {
+
+    const activity =
+        await leaveActivityService(
+            req.params.id,
+            req.user._id
+        );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            activity,
+            "Left activity successfully."
+        )
+    );
+});
+
+
+
+
+export const cancelActivity = asyncHandler(async (req, res) => {
+
+    const activity =
+        await cancelActivityService(
+            req.params.id,
+            req.user._id
+        );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            activity,
+            "Activity cancelled successfully."
+        )
+    );
+});
+
+
+
+
+export const deleteActivity = asyncHandler(async (req, res) => {
+
+    await deleteActivityService(
+        req.params.id,
+        req.user._id
+    );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            null,
+            "Activity deleted successfully."
         )
     );
 });

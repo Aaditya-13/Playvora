@@ -200,3 +200,109 @@ export const updateActivityService = async (
 
     return activity;
 };
+
+
+export const leaveActivityService = async (
+    activityId,
+    userId
+) => {
+
+    const activity = await Activity.findById(activityId);
+
+    if (!activity || activity.isDeleted) {
+        throw new ApiError(404, "Activity not found");
+    }
+
+    if (activity.organizer.toString() === userId.toString()) {
+        throw new ApiError(
+            400,
+            "Organizer cannot leave their own activity."
+        );
+    }
+
+    const participantIndex =
+        activity.participants.findIndex(
+            participant =>
+                participant.toString() === userId.toString()
+        );
+
+    if (participantIndex === -1) {
+        throw new ApiError(
+            400,
+            "You are not a participant."
+        );
+    }
+
+    activity.participants.splice(participantIndex, 1);
+
+    activity.currentPlayers--;
+
+    if (
+        activity.status === "full" &&
+        activity.currentPlayers < activity.maxPlayers
+    ) {
+        activity.status = "open";
+    }
+
+    await activity.save();
+
+    return activity;
+};
+
+
+
+export const cancelActivityService = async (
+    activityId,
+    organizerId
+) => {
+
+    const activity = await Activity.findById(activityId);
+
+    if (!activity || activity.isDeleted) {
+        throw new ApiError(404, "Activity not found");
+    }
+
+    if (
+        activity.organizer.toString() !== organizerId.toString()
+    ) {
+        throw new ApiError(
+            403,
+            "Only organizer can cancel activity."
+        );
+    }
+
+    activity.status = "cancelled";
+
+    await activity.save();
+
+    return activity;
+};
+
+
+
+export const deleteActivityService = async (
+    activityId,
+    organizerId
+) => {
+
+    const activity = await Activity.findById(activityId);
+
+    if (!activity || activity.isDeleted) {
+        throw new ApiError(404, "Activity not found");
+    }
+
+    if (
+        activity.organizer.toString() !== organizerId.toString()
+    ) {
+        throw new ApiError(
+            403,
+            "Only organizer can delete activity."
+        );
+    }
+
+    activity.isDeleted = true;
+
+    await activity.save();
+
+    return;
+};
