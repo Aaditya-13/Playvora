@@ -100,14 +100,14 @@ router.get(
 
 
 router.get(
-    "/",
+    "/search",
     verifyJWT,
     validate(searchSchema, "query"),
     globalSearch
 );
 
 router.get(
-    "/",
+    "/bootstrap",
     verifyJWT,
     bootstrap
 );
