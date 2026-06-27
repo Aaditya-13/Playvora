@@ -16,7 +16,9 @@ export default function Input({
 
       <input
         className={cn(
-          "h-12 w-full rounded-xl border border-zinc-300 px-4 outline-none transition focus:border-green-600",
+          "h-12 w-full rounded-xl border border-zinc-300 px-4 outline-none transition-all duration-150 placeholder:text-zinc-400 focus:border-green-600 focus:ring-2 focus:ring-green-200",
+          error &&
+            "border-red-500 focus:border-red-500 focus:ring-red-200",
           className
         )}
         {...props}

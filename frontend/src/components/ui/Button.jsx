@@ -33,7 +33,10 @@ export default function Button({
       {...props}
     >
       {loading ? (
-        <LoaderCircle className="h-5 w-5 animate-spin" />
+        <>
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
+          Loading...
+        </>
       ) : (
         children
       )}
