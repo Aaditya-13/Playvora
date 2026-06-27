@@ -4,9 +4,34 @@ import Button from "../../../components/ui/Button";
 import Logo from "../../../components/ui/Logo";
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 
+import { toast } from "sonner";
+import useGuestLogin from "../hooks/useGuestLogin";
+
 import ROUTES from "../../../constants/routes";
 
+import { useNavigate } from "react-router-dom";
+
+
+
 export default function Landing() {
+  const navigate = useNavigate();
+
+  const guestMutation = useGuestLogin();
+
+  const handleGuestLogin = async () => {
+    try {
+      await guestMutation.mutateAsync();
+
+      toast.success("Welcome Guest!");
+
+      navigate(ROUTES.HOME);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ??
+        "Guest login failed"
+      );
+    }
+  };
   return (
     <ScreenContainer className="justify-center">
       <div className="mx-auto w-full max-w-sm text-center">
@@ -30,7 +55,11 @@ export default function Landing() {
             <Button variant="outline">Create Account</Button>
           </Link>
 
-          <Button variant="secondary">
+          <Button
+            variant="secondary"
+            loading={guestMutation.isPending}
+            onClick={handleGuestLogin}
+          >
             Continue as Guest
           </Button>
         </div>

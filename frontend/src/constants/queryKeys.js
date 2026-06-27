@@ -1,6 +1,6 @@
 const QUERY_KEYS = {
-  BOOTSTRAP: ["bootstrap"],
   CURRENT_USER: ["current-user"],
+  BOOTSTRAP: ["bootstrap"],
 
   ACTIVITIES: ["activities"],
   NEARBY_ACTIVITIES: ["nearby-activities"],
