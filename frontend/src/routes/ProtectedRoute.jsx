@@ -1,20 +1,18 @@
 import { Navigate, Outlet } from "react-router-dom";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import QUERY_KEYS from "../constants/queryKeys";
 import ROUTES from "../constants/routes";
-import useCurrentUser from "../features/auth/hooks/useCurrentUser";
 
 export default function ProtectedRoute() {
-  const { isLoading, isSuccess } = useCurrentUser();
+  const queryClient = useQueryClient();
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  const user = queryClient.getQueryData(
+    QUERY_KEYS.CURRENT_USER
+  );
 
-  if (!isSuccess) {
+  if (!user) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 

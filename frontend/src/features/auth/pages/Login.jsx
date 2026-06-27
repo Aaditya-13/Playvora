@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -15,6 +15,10 @@ import ROUTES from "../../../constants/routes";
 import loginSchema from "../validation/login.schema";
 import useLogin from "../hooks/useLogin";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import QUERY_KEYS from "../../../constants/queryKeys";
+
 export default function Login() {
   const {
     register,
@@ -26,19 +30,27 @@ export default function Login() {
 
   const loginMutation = useLogin();
 
-  const onSubmit = async (values) => {
-    try {
-      await loginMutation.mutateAsync(values);
+const navigate = useNavigate();
+const queryClient = useQueryClient();
 
-      toast.success("Logged in successfully");
+const onSubmit = async (values) => {
+  try {
+    await loginMutation.mutateAsync(values);
 
-      console.log("TODO: Bootstrap + Navigate");
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ?? "Login failed"
-      );
-    }
-  };
+    await queryClient.invalidateQueries({
+      queryKey: QUERY_KEYS.BOOTSTRAP,
+    });
+
+    toast.success("Welcome back!");
+
+    navigate(ROUTES.HOME);
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message ??
+      "Login failed"
+    );
+  }
+};
 
   return (
     <AuthContainer>

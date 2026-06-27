@@ -11,18 +11,26 @@ import ROUTES from "../../../constants/routes";
 
 import { useNavigate } from "react-router-dom";
 
+import { useQueryClient } from "@tanstack/react-query";
 
+import QUERY_KEYS from "../../../constants/queryKeys";
 
 export default function Landing() {
-  const navigate = useNavigate();
 
   const guestMutation = useGuestLogin();
+
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleGuestLogin = async () => {
     try {
       await guestMutation.mutateAsync();
 
-      toast.success("Welcome Guest!");
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.BOOTSTRAP,
+      });
+
+      toast.success("Welcome to PlayNear!");
 
       navigate(ROUTES.HOME);
     } catch (error) {
