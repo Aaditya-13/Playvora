@@ -93,7 +93,7 @@ const userSchema = new mongoose.Schema(
 
     authProvider: {
       type: String,
-      enum: ["local", "google"],
+      enum: ["local", "google", "guest"],
       default: "local",
     },
 

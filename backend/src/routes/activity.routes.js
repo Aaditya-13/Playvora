@@ -3,6 +3,9 @@ import { Router } from "express";
 import verifyJWT from "../middleware/auth.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 
+import ensureRegistered
+from "../middleware/registered.middleware.js";
+
 import {
     createActivity,
     getNearbyActivities,
@@ -35,6 +38,7 @@ const router = Router();
 router.post(
     "/",
     verifyJWT,
+    ensureRegistered,
     validate(createActivitySchema),
     createActivity
 );
@@ -68,6 +72,7 @@ router.get(
 router.patch(
     "/:id",
     verifyJWT,
+    ensureRegistered,
     validate(updateActivitySchema),
     updateActivity
 );
@@ -75,6 +80,7 @@ router.patch(
 router.post(
     "/:id/join",
     verifyJWT,
+    ensureRegistered,
     validate(joinActivitySchema),
     joinActivity
 );
@@ -83,18 +89,21 @@ router.post(
 router.post(
     "/:id/leave",
     verifyJWT,
+    ensureRegistered,
     leaveActivity
 );
 
 router.patch(
     "/:id/cancel",
     verifyJWT,
+    ensureRegistered,
     cancelActivity
 );
 
 router.delete(
     "/:id",
     verifyJWT,
+    ensureRegistered,
     deleteActivity
 );
 

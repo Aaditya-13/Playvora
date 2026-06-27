@@ -32,3 +32,18 @@ export const searchSchema = z.object({
     q: z.string().trim().min(1),
 
 });
+
+
+export const changePasswordSchema = z.object({
+
+    oldPassword: z
+        .string()
+        .min(6)
+        .max(30),
+
+    newPassword: z
+        .string()
+        .min(6)
+        .max(30),
+
+});

@@ -7,6 +7,7 @@ import {
     loginUserService,
     logoutUserService,
     refreshAccessTokenService,
+    guestLoginService
 } from "../services/auth.service.js";
 
 const cookieOptions = {
@@ -124,4 +125,58 @@ export const deleteAccount = asyncHandler(async (req, res) => {
                 "Account deleted successfully"
             )
         );
+});
+
+
+
+
+export const guestLogin =
+asyncHandler(async (req, res) => {
+
+    const {
+
+        user,
+
+        accessToken,
+
+        refreshToken,
+
+    } = await guestLoginService();
+
+    return res
+
+        .status(200)
+
+        .cookie(
+            "accessToken",
+            accessToken,
+            cookieOptions
+        )
+
+        .cookie(
+            "refreshToken",
+            refreshToken,
+            cookieOptions
+        )
+
+        .json(
+
+            new ApiResponse(
+
+                200,
+
+                {
+
+                    user,
+
+                    accessToken,
+
+                },
+
+                "Guest login successful."
+
+            )
+
+        );
+
 });

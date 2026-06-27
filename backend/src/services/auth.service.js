@@ -2,6 +2,7 @@ import User from "../models/User.model.js";
 import ApiError from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
+import crypto from "crypto"
 
 const generateAccessAndRefreshTokens = async (userId) => {
     const user = await User.findById(userId).select("+refreshToken");
@@ -156,4 +157,66 @@ export const deleteAccountService = async (userId, password) => {
     }
 
     await User.findByIdAndDelete(userId);
+};
+
+
+export const guestLoginService = async () => {
+
+    const random = crypto.randomBytes(4).toString("hex");
+
+    const username = `guest_${random}`;
+
+    const email = `${username}@playnear.local`;
+
+    const password = crypto
+      .randomBytes(16)
+      .toString("hex")
+      .slice(0, 28);
+
+    const expireAt = new Date();
+
+    expireAt.setDate(expireAt.getDate() + 7);
+
+    const user = await User.create({
+
+        username,
+
+        fullName: "Guest",
+
+        email,
+
+        password,
+
+        isGuest: true,
+
+        authProvider: "guest",
+
+        expireAt,
+
+    });
+
+    const {
+
+        accessToken,
+
+        refreshToken,
+
+    } = await generateAccessAndRefreshTokens(
+        user._id
+    );
+
+    const guestUser =
+        await User.findById(user._id)
+            .select("-password -refreshToken");
+
+    return {
+
+        user: guestUser,
+
+        accessToken,
+
+        refreshToken,
+
+    };
+
 };

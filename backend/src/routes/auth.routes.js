@@ -6,7 +6,8 @@ import {
     logoutUser,
     refreshAccessToken,
     getCurrentUser,
-    deleteAccount
+    deleteAccount,
+    guestLogin
 } from "../controllers/auth.controller.js";
 
 import verifyJWT from "../middleware/auth.middleware.js";
@@ -31,6 +32,11 @@ router.post(
     "/login",
     validate(loginSchema),
     loginUser
+);
+
+router.post(
+    "/guest",
+    guestLogin
 );
 
 router.post(

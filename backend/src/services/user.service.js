@@ -127,3 +127,50 @@ async (
         );
 
 };
+
+
+export const changePasswordService = async (
+    userId,
+    oldPassword,
+    newPassword
+) => {
+
+    const user = await User.findById(userId)
+        .select("+password");
+
+    if (!user) {
+        throw new ApiError(
+            404,
+            "User not found."
+        );
+    }
+
+    const isPasswordCorrect =
+        await user.isPasswordCorrect(
+            oldPassword
+        );
+
+    if (!isPasswordCorrect) {
+        throw new ApiError(
+            400,
+            "Old password is incorrect."
+        );
+    }
+
+    if (oldPassword === newPassword) {
+        throw new ApiError(
+            400,
+            "New password cannot be the same as old password."
+        );
+    }
+
+    user.password = newPassword;
+
+    user.refreshToken = undefined;
+
+    await user.save({
+        validateBeforeSave: false,
+    });
+
+    return;
+};

@@ -1,14 +1,11 @@
 import { Router } from "express";
 
 import verifyJWT from "../middleware/auth.middleware.js";
-import validate from "../middleware/validate.middleware.js";
+
+import ensureRegistered
+from "../middleware/registered.middleware.js";
 
 import {
-    joinActivitySchema,
-} from "../validators/join.validator.js";
-
-import {
-    joinActivity,
     getSentRequests,
     getReceivedRequests,
     approveRequest,
@@ -18,12 +15,6 @@ import {
 
 const router = Router();
 
-// router.post(
-//     "/activities/:id/join",
-//     verifyJWT,
-//     validate(joinActivitySchema),
-//     joinActivity
-// );
 
 router.get(
     "/sent",
@@ -40,18 +31,21 @@ router.get(
 router.patch(
     "/:id/approve",
     verifyJWT,
+    ensureRegistered,
     approveRequest
 );
 
 router.patch(
     "/:id/reject",
     verifyJWT,
+    ensureRegistered,
     rejectRequest
 );
 
 router.delete(
     "/:id",
     verifyJWT,
+    ensureRegistered,
     cancelJoinRequest
 );
 

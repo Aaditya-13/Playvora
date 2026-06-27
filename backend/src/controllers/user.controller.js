@@ -21,7 +21,9 @@ import {
 
     updateFavouriteSportsService,
 
-    updateAvatarService
+    updateAvatarService,
+
+    changePasswordService
 
 } from "../services/user.service.js";
 
@@ -200,6 +202,34 @@ asyncHandler(async (req, res) => {
 
             "Bootstrap loaded."
 
+        )
+
+    );
+
+});
+
+
+
+export const changePassword =
+asyncHandler(async (req, res) => {
+
+    const {
+        oldPassword,
+        newPassword,
+    } = req.validated.body;
+
+    await changePasswordService(
+        req.user._id,
+        oldPassword,
+        newPassword
+    );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+            200,
+            null,
+            "Password changed successfully."
         )
 
     );

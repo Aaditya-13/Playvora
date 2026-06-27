@@ -5,6 +5,9 @@ import validate from "../middleware/validate.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { updateAvatar } from "../controllers/user.controller.js";
 
+import ensureRegistered
+from "../middleware/registered.middleware.js";
+
 import {
 
     getCurrentUser,
@@ -17,7 +20,9 @@ import {
 
     globalSearch,
 
-    bootstrap
+    bootstrap,
+
+    changePassword
 
 } from "../controllers/user.controller.js";
 
@@ -27,7 +32,9 @@ import {
 
     updateFavouriteSportsSchema,
 
-    searchSchema
+    searchSchema,
+
+    changePasswordSchema
 
 } from "../validators/user.validator.js";
 
@@ -48,6 +55,8 @@ router.patch(
     "/profile",
 
     verifyJWT,
+
+    ensureRegistered,
 
     validate(updateProfileSchema),
 
@@ -74,6 +83,8 @@ router.patch(
 
     verifyJWT,
 
+    ensureRegistered,
+
     upload.single("avatar"),
 
     updateAvatar
@@ -99,6 +110,22 @@ router.get(
     "/",
     verifyJWT,
     bootstrap
+);
+
+
+
+router.patch(
+
+    "/change-password",
+
+    verifyJWT,
+
+    ensureRegistered,
+
+    validate(changePasswordSchema),
+
+    changePassword
+
 );
 
 export default router;
