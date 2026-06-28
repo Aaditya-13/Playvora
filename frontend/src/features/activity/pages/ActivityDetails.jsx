@@ -1,42 +1,61 @@
-import { useParams, useNavigate } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { useNavigate, useParams } from "react-router";
 
-import ScreenContainer from "../../../components/ui/ScreenContainer.jsx";
-import PageHeader from "../../../components/ui/PageHeader.jsx";
+import ScreenContainer from "../../../components/ui/ScreenContainer";
+import PageHeader from "../../../components/ui/PageHeader";
 
-import useActivityDetails from "../hooks/useActivityDetails.js";
-import useJoinActivity from "../hooks/useJoinActivity.js";
-import useLeaveActivity from "../hooks/useLeaveActivity.js";
+import useActivityDetails from "../hooks/useActivityDetails";
+import useJoinActivity from "../hooks/useJoinActivity";
+import useLeaveActivity from "../hooks/useLeaveActivity";
 
-import ActivityHeader from "../components/ActivityHeader.jsx";
-import ActivityInfoMatrix from "../components/ActivityInfoMatrix.jsx";
-import ActivityHostBio from "../components/ActivityHostBio.jsx";
-import ActivityParticipantRoster from "../components/ActivityParticipantRoster.jsx";
-import ActivityActionController from "../components/ActivityActionController.jsx"; 
+import LoadingState from "../components/activityDetailsComponents/LoadingState";
+import ErrorState from "../components/activityDetailsComponents/ErrorState";
+
+import ActivityHero from "../components/activityDetailsComponents/ActivityHero";
+import ActivityStatsCard from "../components/activityDetailsComponents/ActivityStatsCard";
+import ActivityMapCard from "../components/activityDetailsComponents/ActivityMapCard";
+import GameDetailsCard from "../components/activityDetailsComponents/GameDetailsCard";
+import OrganizerCard from "../components/activityDetailsComponents/OrganizerCard";
+import ParticipantsCard from "../components/activityDetailsComponents/ParticipantsCard";
+import NotesCard from "../components/activityDetailsComponents/NotesCard";
+import BottomActionBar from "../components/activityDetailsComponents/BottomActionBar";
 
 export default function ActivityDetails() {
   const { id } = useParams();
+
   const navigate = useNavigate();
-  
-  const { data, isLoading, isError } = useActivityDetails(id);
-  const { mutate: join, isPending: isJoining } = useJoinActivity(id);
-  const { mutate: leave, isPending: isLeaving } = useLeaveActivity(id);
+
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+  } = useActivityDetails(id);
+
+  const {
+    mutate: join,
+    isPending: isJoining,
+  } = useJoinActivity(id);
+
+  const {
+    mutate: leave,
+    isPending: isLeaving,
+  } = useLeaveActivity(id);
 
   if (isLoading) {
     return (
-      <ScreenContainer className="flex items-center justify-center bg-zinc-50">
-        <p className="text-zinc-500 animate-pulse font-medium">Loading activity...</p>
+      <ScreenContainer className="bg-zinc-50 py-6">
+        <LoadingState />
       </ScreenContainer>
     );
   }
 
   if (isError || !data?.data) {
     return (
-      <ScreenContainer className="flex flex-col items-center justify-center gap-4 bg-zinc-50">
-        <p className="text-red-500 font-medium">Failed to load activity.</p>
-        <button onClick={() => navigate(-1)} className="text-sm font-bold text-zinc-900 bg-white border border-zinc-200 px-6 py-2.5 rounded-xl shadow-sm">
-          Go Back
-        </button>
+      <ScreenContainer className="bg-zinc-50">
+        <ErrorState
+          onRetry={refetch}
+          onBack={() => navigate(-1)}
+        />
       </ScreenContainer>
     );
   }
@@ -44,42 +63,51 @@ export default function ActivityDetails() {
   const activity = data.data;
 
   return (
-    <ScreenContainer className="bg-zinc-50 pb-20">
-      <PageHeader 
-        leftNode={
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 text-zinc-900 hover:bg-zinc-100 rounded-full transition-colors">
-            <ArrowLeft size={24} />
-          </button>
-        }
-        title="Activity Details" 
-      />
+    <ScreenContainer className="bg-zinc-50 pb-28">
 
-      <div className="flex flex-col gap-5 mt-4 px-4 max-w-2xl mx-auto pb-6">
-        <ActivityHeader activity={activity} />
-        <ActivityInfoMatrix activity={activity} />
-        
-        {activity.notes && (
-          <div className="bg-white p-5 border border-zinc-200 rounded-2xl shadow-sm">
-            <h3 className="text-base font-bold text-zinc-900 mb-2">About this game</h3>
-            <p className="text-sm text-zinc-600 leading-relaxed whitespace-pre-wrap">{activity.notes}</p>
-          </div>
-        )}
+      <PageHeader title="Activity Details" />
 
-        <ActivityHostBio host={activity.host} />
-        
-        <ActivityParticipantRoster 
-          maxPlayers={activity.maxPlayers} 
-          participants={activity.participants} 
+      <div className="mx-auto mt-6 flex max-w-5xl flex-col gap-6">
+
+        <ActivityHero
+          activity={activity}
+          onBack={() => navigate(-1)}
         />
 
-        <ActivityActionController 
-          activity={activity} 
-          isJoining={isJoining} 
-          onJoin={() => join()} 
+        <ActivityStatsCard
+          activity={activity}
+        />
+
+        <ActivityMapCard
+          activity={activity}
+        />
+
+        <GameDetailsCard
+          activity={activity}
+        />
+
+        <OrganizerCard
+          organizer={activity.organizer}
+        />
+
+        <ParticipantsCard
+          activity={activity}
+        />
+
+        <NotesCard
+          activity={activity}
+        />
+
+        <BottomActionBar
+          activity={activity}
+          isJoining={isJoining}
           isLeaving={isLeaving}
-          onLeave={() => leave()}
+          onJoin={join}
+          onLeave={leave}
         />
+
       </div>
+
     </ScreenContainer>
   );
 }
