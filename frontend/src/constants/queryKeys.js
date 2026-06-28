@@ -10,6 +10,8 @@ const QUERY_KEYS = {
   PROFILE: ["profile"],
 
   SEARCH: ["search"],
+
+  USER_STATS: ["user-stats"],
 };
 
 export default QUERY_KEYS;

@@ -9,6 +9,9 @@ const validate = (schema, source = "body") => {
         const result = schema.safeParse(data);
 
         if (!result.success) {
+            console.dir(result.error.issues, { depth: null });
+          console.dir(error.flatten(), { depth: null });
+          console.dir(error.issues, { depth: null });
             return next(
                 new ApiError(
                     400,

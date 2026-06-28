@@ -41,6 +41,10 @@ const router = createBrowserRouter([
             path: ROUTES.REGISTER,
             element: <Register />,
           },
+          // {
+          //   path: "/test",
+          //   element: <LeafletMap />
+          // }
         ],
       },
     ],

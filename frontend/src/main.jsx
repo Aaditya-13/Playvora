@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
 import "./index.css";
-
+import "leaflet/dist/leaflet.css";
 import Providers from "./app/providers";
 import AppInitializer from "./app/AppInitializer";
 import router from "./app/router";
