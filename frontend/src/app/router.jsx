@@ -18,6 +18,8 @@ import CreateActivity from "../features/activity/pages/CreateActivity";
 import Dashboard from "../features/dashboard/pages/Dashboard";
 import Profile from "../features/profile/pages/Profile";
 
+import ActivityDetails from "../features/activity/pages/ActivityDetails.jsx";
+
 import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
@@ -57,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.SEARCH,
             element: <Search />,
+          },
+          {
+            path: ROUTES.ACTIVITY_DETAILS,
+            element: <ActivityDetails />,
           },
           {
             path: ROUTES.CREATE,
