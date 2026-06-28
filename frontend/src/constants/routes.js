@@ -9,7 +9,7 @@ const ROUTES = {
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
 
-  ACTIVITY_DETAILS: "/activity/:activityId",
+  ACTIVITY_DETAILS: "/activities/:activityId",
 
   EDIT_PROFILE: "/profile/edit",
 

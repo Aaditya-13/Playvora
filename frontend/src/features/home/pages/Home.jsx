@@ -1,20 +1,24 @@
+import BottomNavigation from "../../../components/shared/BottomNavigation";
+
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
-import SportChips from "../components/SportChips";
-import BottomNavigation from "../../../components/shared/BottomNavigation";
+import SportChip from "../components/SportChip";
+import ActivityList from "../components/ActivityList";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col bg-zinc-50">
+    <main className="min-h-screen bg-zinc-50 pb-20">
       <Header />
 
-      <section className="px-4 py-5">
+      <section className="mx-auto w-full max-w-5xl px-4 py-5">
         <SearchBar />
 
-        <SportChips />
+        <div className="mt-5">
+          <SportChip />
+        </div>
 
         <div className="mt-6">
-          Activities will appear here...
+          <ActivityList />
         </div>
       </section>
 

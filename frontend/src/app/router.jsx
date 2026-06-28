@@ -12,7 +12,7 @@ import Landing from "../features/auth/pages/Landing";
 import Login from "../features/auth/pages/Login";
 import Register from "../features/auth/pages/Register";
 
-import Home from "../features/home/pages/Home";
+import Home from "../features/home/pages/Home.jsx";
 import Search from "../features/search/pages/Search";
 import CreateActivity from "../features/activity/pages/CreateActivity";
 import Dashboard from "../features/dashboard/pages/Dashboard";

@@ -39,8 +39,8 @@ const navigationItems = [
 
 export default function BottomNavigation() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 bg-white md:hidden">
-      <div className="mx-auto flex h-16 max-w-screen-sm items-center justify-around px-2">
+    <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none">
+      <nav className="pointer-events-auto flex h-16 w-full max-w-5xl items-center justify-around border-t border-zinc-200 bg-white px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
         {navigationItems.map(({ label, icon: Icon, to }) => (
           <NavLink key={label} to={to}>
             {({ isActive }) => (
@@ -71,7 +71,7 @@ export default function BottomNavigation() {
             )}
           </NavLink>
         ))}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
