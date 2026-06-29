@@ -1,59 +1,117 @@
-import { Link } from "react-router";
-import { Calendar, Clock, MapPin, Users } from "lucide-react";
-import { format } from "date-fns";
-import Badge from "../../../components/ui/Badge.jsx";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  IndianRupee,
+  ChevronRight,
+} from "lucide-react";
 
-export default function ActivityCard({ activity }) {
-  const dateObj = new Date(activity.scheduledAt);
-  const participantCount = activity.participants?.length || 0;
-  const isFull = participantCount >= activity.maxPlayers;
+import { format } from "date-fns";
+import { useNavigate } from "react-router";
+
+import Badge from "../../../components/ui/Badge";
+
+export default function ActivityCard({
+  activity,
+}) {
+  const navigate = useNavigate();
 
   return (
-    <Link 
-      to={`/activities/${activity._id}`}
-      className="block bg-white border border-zinc-200 rounded-xl p-4 shadow-sm active:scale-[0.98] transition-transform"
-    >
-      <div className="flex items-center justify-between mb-3">
-        <Badge className="bg-zinc-100 text-zinc-900 font-bold capitalize px-3 py-1">
-          {activity.sport}
-        </Badge>
-        {activity.skillLevel && (
-          <span className="text-xs font-medium text-zinc-500 capitalize">
-            {activity.skillLevel}
-          </span>
-        )}
+    <article className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-green-200 hover:shadow-md">
+
+      <div className="flex items-start justify-between">
+
+        <div>
+
+          <h3 className="text-lg font-bold text-zinc-900">
+            {activity.title}
+          </h3>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+
+            <Badge>
+              {activity.sport}
+            </Badge>
+
+            <Badge variant="secondary">
+              {activity.skillLevel}
+            </Badge>
+
+          </div>
+
+        </div>
+
+        <div className="text-right">
+
+          {activity.cost.amount === 0 ? (
+            <p className="font-bold text-green-600">
+              Free
+            </p>
+          ) : (
+            <div className="flex items-center justify-end gap-1 font-bold text-zinc-900">
+
+              <IndianRupee size={16} />
+
+              {activity.cost.amount}
+
+            </div>
+          )}
+
+          <p className="text-xs text-zinc-500">
+            {activity.cost.description}
+          </p>
+
+        </div>
+
       </div>
 
-      <h3 className="text-lg font-bold text-zinc-900 leading-tight mb-1">
-        {activity.title}
-      </h3>
-      
-      <div className="flex items-center gap-1.5 text-zinc-500 mb-4">
-        <MapPin size={16} />
-        <span className="text-sm font-medium">
-          {activity.groundName}
-          {activity.distance && ` • ${activity.distance}km`}
-        </span>
+      <div className="mt-5 space-y-3">
+
+        <div className="flex items-center gap-2 text-sm text-zinc-600">
+
+          <MapPin size={16} />
+
+          <span>{activity.groundName}</span>
+
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-zinc-600">
+
+          <Calendar size={16} />
+
+          <span>
+            {format(
+              new Date(activity.scheduledAt),
+              "EEE, MMM d • h:mm a"
+            )}
+          </span>
+
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-zinc-600">
+
+          <Users size={16} />
+
+          <span>
+            {activity.currentPlayers} / {activity.maxPlayers} Players
+          </span>
+
+        </div>
+
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-3 border-t border-zinc-100">
-        <div className="flex items-center gap-2 text-zinc-700">
-          <Calendar size={16} className="text-zinc-400" />
-          <span className="text-sm font-medium">{format(dateObj, "MMM d")}</span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-zinc-700">
-          <Clock size={16} className="text-zinc-400" />
-          <span className="text-sm font-medium">{format(dateObj, "h:mm a")}</span>
-        </div>
-        
-        <div className="flex items-center gap-2 text-zinc-700">
-          <Users size={16} className={isFull ? "text-red-400" : "text-zinc-400"} />
-          <span className={`text-sm font-medium ${isFull ? "text-red-600" : ""}`}>
-            {participantCount}/{activity.maxPlayers}
-          </span>
-        </div>
-      </div>
-    </Link>
+      <button
+        onClick={() =>
+          navigate(`/activities/${activity._id}`)
+        }
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border border-zinc-200 py-3 font-semibold transition hover:border-green-300 hover:bg-green-50"
+      >
+        View Details
+
+        <ChevronRight size={18} />
+
+      </button>
+
+    </article>
   );
 }

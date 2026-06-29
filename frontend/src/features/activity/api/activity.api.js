@@ -1,13 +1,5 @@
 import api from "../../../api/axios.js";
 
-export const getNearbyActivities = async (params) => {
-  const { data } = await api.get("/activities/nearby", {
-    params,
-  });
-
-  return data;
-};
-
 export const getActivityDetails = async (activityId) => {
   const { data } = await api.get(`/activities/${activityId}`);
 
