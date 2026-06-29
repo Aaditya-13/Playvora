@@ -1,15 +1,15 @@
 import {
   Calendar,
+  ChevronRight,
   MapPin,
   Users,
-  ChevronRight,
 } from "lucide-react";
 
 import { format } from "date-fns";
 import { useNavigate } from "react-router";
 
-import Button from "../../../components/ui/Button";
 import Badge from "../../../components/ui/Badge";
+import Button from "../../../components/ui/Button";
 
 export default function ActivityDashboardCard({
   activity,
@@ -30,11 +30,9 @@ export default function ActivityDashboardCard({
           </h3>
 
           <div className="mt-2">
-
             <Badge>
               {activity.sport}
             </Badge>
-
           </div>
 
         </div>
@@ -53,30 +51,24 @@ export default function ActivityDashboardCard({
       <div className="mt-5 space-y-3">
 
         <div className="flex items-center gap-2 text-sm text-zinc-600">
-
           <Calendar size={16} />
 
           {format(
             new Date(activity.scheduledAt),
             "EEE, MMM d • h:mm a"
           )}
-
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-600">
-
           <MapPin size={16} />
 
           {activity.groundName}
-
         </div>
 
         <div className="flex items-center gap-2 text-sm text-zinc-600">
-
           <Users size={16} />
 
           {activity.currentPlayers} / {activity.maxPlayers}
-
         </div>
 
       </div>
@@ -89,8 +81,11 @@ export default function ActivityDashboardCard({
               variant="outline"
               className="flex-1"
               onClick={secondaryAction.onClick}
+              disabled={secondaryAction.loading}
             >
-              {secondaryAction.label}
+              {secondaryAction.loading
+                ? "Please wait..."
+                : secondaryAction.label}
             </Button>
           )}
 
@@ -98,8 +93,11 @@ export default function ActivityDashboardCard({
             <Button
               className="flex-1"
               onClick={primaryAction.onClick}
+              disabled={primaryAction.loading}
             >
-              {primaryAction.label}
+              {primaryAction.loading
+                ? "Please wait..."
+                : primaryAction.label}
             </Button>
           )}
 
