@@ -3,10 +3,11 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import useBootstrap from "../features/bootstrap/hooks/useBootstrap";
 import QUERY_KEYS from "../constants/queryKeys";
+import useAuthStore from "../store/authStore";
 
 export default function AppInitializer({ children }) {
   const queryClient = useQueryClient();
-
+  const { setUser } = useAuthStore();
   const { data, isSuccess } = useBootstrap({
     retry: false,
   });
@@ -21,9 +22,12 @@ export default function AppInitializer({ children }) {
 
     queryClient.setQueryData(
       QUERY_KEYS.CURRENT_USER,
-      data.user
+      data.data.user
     );
-  }, [data, isSuccess, queryClient]);
+
+    setUser(data.data.user);
+    
+  }, [data, isSuccess, queryClient, setUser]);
 
   return children;
 }
