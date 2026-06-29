@@ -20,6 +20,10 @@ import Profile from "../features/profile/pages/Profile";
 
 import ActivityDetails from "../features/activity/pages/ActivityDetails.jsx";
 
+import Settings from "../features/profile/pages/Settings.jsx"
+import EditProfile from "../features/profile/pages/EditProfile.jsx";
+import ChangePassword from "../features/profile/pages/ChangePassword.jsx";
+import DeleteAccount from "../features/profile/pages/DeleteAccount.jsx";
 import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
@@ -79,6 +83,22 @@ const router = createBrowserRouter([
           {
             path: ROUTES.PROFILE,
             element: <Profile />,
+          },
+          {
+            path: "/profile/settings",
+            element: <Settings />,
+          },
+          {
+            path: "/profile/edit",
+            element: <EditProfile />,
+          },
+          {
+            path: "/profile/settings/change-password",
+            element: <ChangePassword />,
+          },
+          {
+            path: "/profile/settings/delete-account",
+            element: <DeleteAccount />,
           },
         ],
       },
