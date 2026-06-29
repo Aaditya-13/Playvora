@@ -1,44 +1,46 @@
 import Activity from "../models/Activity.model.js";
 
 export const globalSearchService =
-async (query) => {
+  async (query) => {
 
     return await Activity.find({
 
-        isDeleted: false,
+      isDeleted: false,
+      status: "open",
+      scheduledAt: {
+        $gte: new Date(),
+      },
 
-        status: "open",
+      $or: [
 
-        $or: [
+        {
+          title: {
+            $regex: query,
+            $options: "i",
+          },
+        },
 
-            {
-                title: {
-                    $regex: query,
-                    $options: "i",
-                },
-            },
+        {
+          sport: {
+            $regex: query,
+            $options: "i",
+          },
+        },
 
-            {
-                sport: {
-                    $regex: query,
-                    $options: "i",
-                },
-            },
+        {
+          groundName: {
+            $regex: query,
+            $options: "i",
+          },
+        },
 
-            {
-                groundName: {
-                    $regex: query,
-                    $options: "i",
-                },
-            },
-
-        ],
+      ],
 
     })
-    .populate(
+      .populate(
         "organizer",
         "username fullName avatar"
-    )
-    .limit(20);
+      )
+      .limit(20);
 
-};
+  };
