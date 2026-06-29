@@ -16,7 +16,7 @@ export const getActivityDetails = async (activityId) => {
 
 export const joinActivity = async (activityId) => {
   const { data } = await api.post(
-    `/join-requests/${activityId}`
+    `/activities/${activityId}/join`
   );
 
   return data;

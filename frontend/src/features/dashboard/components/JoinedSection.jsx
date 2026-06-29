@@ -1,9 +1,12 @@
 import ActivityDashboardCard from "./ActivityDashboardCard";
 import EmptyDashboard from "./EmptyDashboard";
+import { useNavigate } from "react-router";
+import ROUTES from "../../../constants/routes";
 
 export default function JoinedSection({
   activities = [],
 }) {
+  const navigate = useNavigate();
   return (
     <section className="space-y-4">
 
@@ -30,13 +33,17 @@ export default function JoinedSection({
             activity={activity}
             secondaryAction={{
               label: "Leave",
-              onClick: () =>
-                console.log("Leave", activity._id),
+              onClick: () => console.log("Leave", activity._id),
             }}
             primaryAction={{
               label: "View",
               onClick: () =>
-                console.log("View", activity._id),
+                navigate(
+                  ROUTES.ACTIVITY_DETAILS.replace(
+                    ":id",
+                    activity._id
+                  )
+                ),
             }}
           />
         ))

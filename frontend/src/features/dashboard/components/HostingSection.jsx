@@ -1,9 +1,11 @@
 import ActivityDashboardCard from "./ActivityDashboardCard";
 import EmptyDashboard from "./EmptyDashboard";
-
+import { useNavigate } from "react-router";
+import ROUTES from "../../../constants/routes";
 export default function HostingSection({
   activities = [],
 }) {
+  const navigate = useNavigate();
   return (
     <section className="space-y-4">
 
@@ -30,13 +32,13 @@ export default function HostingSection({
             activity={activity}
             secondaryAction={{
               label: "Edit",
-              onClick: () =>
-                console.log("Edit", activity._id),
+              onClick: () => console.log("Edit", activity._id),
             }}
             primaryAction={{
               label: "Manage",
-              onClick: () =>
-                console.log("Manage", activity._id),
+              onClick: () => navigate(
+                ROUTES.ACTIVITY_DETAILS.replace(":id", activity._id)
+              ),
             }}
           />
         ))

@@ -1,9 +1,12 @@
 import ActivityDashboardCard from "./ActivityDashboardCard";
 import EmptyDashboard from "./EmptyDashboard";
+import { useNavigate } from "react-router";
+import ROUTES from "../../../constants/routes";
 
 export default function CompletedSection({
   activities = [],
 }) {
+  const navigate = useNavigate();
   return (
     <section className="space-y-4">
 
@@ -31,7 +34,12 @@ export default function CompletedSection({
             primaryAction={{
               label: "View",
               onClick: () =>
-                console.log("View", activity._id),
+                navigate(
+                  ROUTES.ACTIVITY_DETAILS.replace(
+                    ":id",
+                    activity._id
+                  )
+                ),
             }}
           />
         ))

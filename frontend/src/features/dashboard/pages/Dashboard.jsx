@@ -14,85 +14,62 @@ import DashboardLoading from "../components/DashboardLoading";
 import EmptyDashboard from "../components/EmptyDashboard";
 
 export default function Dashboard() {
-const {
-  data,
-  isLoading,
-  isError,
-} = useDashboard();
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useDashboard();
 
   if (isLoading) {
     return (
-      <ScreenContainer className="bg-zinc-50 py-6">
+      <ScreenContainer className="bg-zinc-50">
         <DashboardLoading />
       </ScreenContainer>
     );
   }
 
-  if (isError || !data) {
+  if (isError) {
     return (
-      <ScreenContainer className="bg-zinc-50 py-6">
+      <ScreenContainer className="bg-zinc-50">
         <EmptyDashboard
-          message="Couldn't load your dashboard."
+          message="Couldn't load dashboard."
         />
       </ScreenContainer>
     );
   }
 
-const hosting = data?.hosting ?? [];
+  const hosting = data?.hosting ?? [];
+  const joined = data?.joined ?? [];
+  const completed = data?.completed ?? [];
 
-const joined = data?.joined ?? [];
-
-const completed = [];
-
-const stats = {
-  hosting: hosting.length,
-  joined: joined.length,
-  completed: completed.length,
-};
-
-  const hasActivities =
-    hosting.length ||
-    joined.length ||
-    completed.length;
+  const stats = {
+    hosting: hosting.length,
+    joined: joined.length,
+    completed: completed.length,
+  };
 
   return (
     <ScreenContainer className="bg-zinc-50 pb-24">
 
-      <PageHeader
-        title="Dashboard"
-      />
+      <PageHeader title="Dashboard" />
 
-      <div className="mx-auto mt-6 flex max-w-5xl flex-col gap-6 px-4">
+      <div className="mx-auto mt-6 flex max-w-4xl flex-col gap-6 px-4">
 
         <DashboardHero />
 
-        <DashboardStats
-          stats={stats}
+        <DashboardStats stats={stats} />
+
+        <HostingSection
+          activities={hosting}
         />
 
-        {!hasActivities && (
-          <EmptyDashboard
-            message="You don't have any activities yet."
-          />
-        )}
+        <JoinedSection
+          activities={joined}
+        />
 
-        {hosting.length > 0 && (
-          <HostingSection
-            activities={hosting}
-          />
-        )}
-
-        {joined.length > 0 && (
-          <JoinedSection
-            activities={joined}
-          />
-        )}
-
-        {completed.length > 0 && (
-          <CompletedSection
-            activities={completed}
-          />
-        )}
+        <CompletedSection
+          activities={completed}
+        />
 
       </div>
 
