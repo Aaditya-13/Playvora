@@ -1,10 +1,10 @@
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
 
-import useActivityForm from "../hooks/useActivityForm";
+import useEditActivityForm from "../hooks/useEditActivityForm";
 
 import ActivityHero from "../components/createActivityComponents/ActivityHero";
 import SportSelector from "../components/createActivityComponents/SportSelector";
@@ -16,8 +16,9 @@ import PricingCard from "../components/createActivityComponents/PricingCard";
 import NotesCard from "../components/createActivityComponents/NotesCard";
 import PublishBar from "../components/createActivityComponents/PublishBar";
 
-export default function CreateActivity() {
+export default function EditActivity() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const {
     register,
@@ -43,14 +44,14 @@ export default function CreateActivity() {
     VENUE_TYPES,
     JOIN_POLICIES,
     GENDER_OPTIONS,
-  } = useActivityForm();
+  } = useEditActivityForm(id);
 
 
   return (
     <ScreenContainer className="bg-zinc-100 pb-32">
 
       <PageHeader
-        title="Host a Game"
+        title="Edit Activity"
         leftNode={
           <button
             onClick={() => navigate(-1)}
@@ -121,9 +122,9 @@ export default function CreateActivity() {
       <PublishBar
         submit={submit}
         isPending={isPending}
+        buttonText="Save Changes"
       />
 
     </ScreenContainer>
   );
 }
-

@@ -3,6 +3,7 @@ import Button from "../../../../components/ui/Button";
 export default function PublishBar({
   submit,
   isPending,
+  buttonText
 }) {
   return (
     <div className="sticky bottom-0 left-0 right-0 mt-6 border-t border-zinc-200 bg-white/95 backdrop-blur">
@@ -24,7 +25,9 @@ export default function PublishBar({
           disabled={isPending}
           className="min-w-[190px] h-12"
         >
-          {isPending ? "Publishing..." : "Publish Activity"}
+          {isPending
+            ? "Saving..."
+            : buttonText ?? "Publish Activity"}
         </Button>
 
       </div>

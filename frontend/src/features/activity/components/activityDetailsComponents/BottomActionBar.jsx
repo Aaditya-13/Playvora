@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import Button from "../../../../components/ui/Button";
 import useAuthStore from "../../../../store/authStore";
+import ROUTES from "../../../../constants/routes";
 
 export default function BottomActionBar({
   activity,
@@ -48,8 +49,14 @@ export default function BottomActionBar({
 
         <Button
           variant="outline"
-          onClick={() =>
-            console.log("Edit Activity")
+          onClick={() => {
+            return navigate(
+              ROUTES.EDIT_ACTIVITY.replace(
+                ":id",
+                activity._id
+              )
+            )
+          }
           }
         >
           Edit Activity
@@ -133,8 +140,8 @@ export default function BottomActionBar({
         {isJoining
           ? "Sending Request..."
           : activity.joinPolicy === "approval"
-          ? "Request to Join"
-          : "Join Activity"}
+            ? "Request to Join"
+            : "Join Activity"}
       </Button>
 
     </div>

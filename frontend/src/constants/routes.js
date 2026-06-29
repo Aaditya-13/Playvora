@@ -14,6 +14,10 @@ const ROUTES = {
   EDIT_PROFILE: "/profile/edit",
 
   NOT_FOUND: "*",
+
+  EDIT_ACTIVITY: "/activities/:id/edit",
+
+  MANAGE_ACTIVITY: "/activities/:id/manage",
 };
 
 export default ROUTES;

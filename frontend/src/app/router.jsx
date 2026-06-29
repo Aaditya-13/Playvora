@@ -17,6 +17,7 @@ import Search from "../features/search/pages/Search";
 import CreateActivity from "../features/activity/pages/CreateActivity";
 import Dashboard from "../features/dashboard/pages/Dashboard";
 import Profile from "../features/profile/pages/Profile";
+import EditActivity from "../features/activity/pages/EditActivity";
 
 import ActivityDetails from "../features/activity/pages/ActivityDetails.jsx";
 
@@ -45,10 +46,6 @@ const router = createBrowserRouter([
             path: ROUTES.REGISTER,
             element: <Register />,
           },
-          // {
-          //   path: "/test",
-          //   element: <LeafletMap />
-          // }
         ],
       },
     ],
@@ -75,6 +72,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.CREATE,
             element: <CreateActivity />,
+          },
+          {
+            path: ROUTES.EDIT_ACTIVITY,
+            element: <EditActivity />,
           },
           {
             path: ROUTES.DASHBOARD,

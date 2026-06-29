@@ -30,3 +30,16 @@ export const createActivity = async (payload) => {
 
   return data;
 };
+
+
+export const updateActivity = async (
+  activityId,
+  payload
+) => {
+  const response = await api.patch(
+    `/activities/${activityId}`,
+    payload
+  );
+
+  return response.data;
+};
