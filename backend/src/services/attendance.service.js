@@ -26,10 +26,19 @@ export const markAttendanceService = async (
     );
   }
 
-  if (new Date() < activity.scheduledAt) {
+  // if (new Date() < activity.scheduledAt) {
+  //   throw new ApiError(
+  //     400,
+  //     "Attendance can only be marked after the activity starts."
+  //   );
+  // }
+
+  if (
+    activity.status !== "completed"
+  ) {
     throw new ApiError(
       400,
-      "Attendance can only be marked after the activity starts."
+      "Attendance can only be marked after the activity is completed."
     );
   }
 

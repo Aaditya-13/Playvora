@@ -15,7 +15,8 @@ import {
     updateActivity,
     leaveActivity,
     cancelActivity,
-    deleteActivity
+    deleteActivity,
+    completeActivity,
 } from "../controllers/activity.controller.js";
 
 import { joinActivity } from "../controllers/joinRequest.controller.js";
@@ -105,6 +106,14 @@ router.delete(
     verifyJWT,
     ensureRegistered,
     deleteActivity
+);
+
+
+router.patch(
+    "/:id/complete",
+    verifyJWT,
+    ensureRegistered,
+    completeActivity
 );
 
 export default router;

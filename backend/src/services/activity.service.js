@@ -159,8 +159,6 @@ export const getMyCreatedActivitiesService = async (userId) => {
 };
 
 
-
-
 export const getMyJoinedActivitiesService = async (userId) => {
 
     return await Activity.find({
@@ -171,8 +169,6 @@ export const getMyJoinedActivitiesService = async (userId) => {
     });
 
 };
-
-
 
 
 export const updateActivityService = async (
@@ -301,6 +297,60 @@ export const deleteActivityService = async (
     }
 
     activity.isDeleted = true;
+
+    await activity.save();
+
+    return;
+};
+
+
+
+export const completeActivityService = async (
+    activityId,
+    organizerId
+) => {
+
+    const activity = await Activity.findById(activityId);
+
+    if (!activity || activity.isDeleted) {
+        throw new ApiError(
+            404,
+            "Activity not found."
+        );
+    }
+
+    if (
+        activity.organizer.toString() !==
+        organizerId.toString()
+    ) {
+        throw new ApiError(
+            403,
+            "Only the organizer can complete this activity."
+        );
+    }
+
+    if (activity.status === "cancelled") {
+        throw new ApiError(
+            400,
+            "Cancelled activities cannot be completed."
+        );
+    }
+
+    if (activity.status === "completed") {
+        throw new ApiError(
+            400,
+            "Activity is already completed."
+        );
+    }
+
+    if (new Date() < activity.scheduledAt) {
+        throw new ApiError(
+            400,
+            "Activity has not started yet."
+        );
+    }
+
+    activity.status = "completed";
 
     await activity.save();
 

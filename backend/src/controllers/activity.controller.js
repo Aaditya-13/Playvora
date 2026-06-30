@@ -11,6 +11,7 @@ import {
     leaveActivityService,
     cancelActivityService,
     deleteActivityService,
+    completeActivityService,
 } from "../services/activity.service.js";
 
 export const createActivity = asyncHandler(async (req, res) => {
@@ -173,4 +174,29 @@ export const deleteActivity = asyncHandler(async (req, res) => {
             "Activity deleted successfully."
         )
     );
+});
+
+
+export const completeActivity =
+asyncHandler(async (req, res) => {
+
+    await completeActivityService(
+        req.params.id,
+        req.user._id
+    );
+
+    return res.status(200).json(
+
+        new ApiResponse(
+
+            200,
+
+            null,
+
+            "Activity marked as completed."
+
+        )
+
+    );
+
 });
