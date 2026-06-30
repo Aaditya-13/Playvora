@@ -1,62 +1,115 @@
 import Activity from "../models/Activity.model.js";
 import Attendance from "../models/Attendance.model.js";
+import JoinRequest from "../models/JoinRequest.model.js";
 import User from "../models/User.model.js";
 
 export const getUserStatsService = async (userId) => {
 
-    const [
-        user,
-        hosted,
-        joined,
-        attendance,
-    ] = await Promise.all([
+  const [
+    user,
+    hosted,
+    joined,
+    attendanceRecords,
+    upcomingActivities,
+    pendingRequests,
+  ] = await Promise.all([
 
-        User.findById(userId),
+    User.findById(userId),
 
-        Activity.countDocuments({
-            organizer: userId,
-            isDeleted: false,
-        }),
+    Activity.countDocuments({
+      organizer: userId,
+      isDeleted: false,
+    }),
 
-        Activity.countDocuments({
-            participants: userId,
-            isDeleted: false,
-        }),
+    Activity.countDocuments({
+      participants: userId,
 
-        Attendance.find({
-            participant: userId,
-        }),
+      organizer: {
+        $ne: userId,
+      },
 
-    ]);
+      isDeleted: false,
+    }),
 
-    const present =
-        attendance.filter(
-            a => a.status === "present"
-        ).length;
+    Attendance.find({
+      participant: userId,
+    }),
 
-    const attendanceRate =
-        attendance.length === 0
-            ? 0
-            : Math.round(
-                (present / attendance.length) * 100
-            );
+    Activity.countDocuments({
+      participants: userId,
+      status: {
+        $in: ["open", "full"],
+      },
+      scheduledAt: {
+        $gte: new Date(),
+      },
+      isDeleted: false,
+    }),
 
-    return {
+    JoinRequest.countDocuments({
+      requester: userId,
+      status: "pending",
+    }),
 
-        reliabilityScore:
-            user.reliabilityScore,
+  ]);
 
-        matchesHosted:
-            hosted,
+  const present =
+    attendanceRecords.filter(
+      record => record.status === "present"
+    ).length;
 
-        matchesJoined:
-            joined,
+  const late =
+    attendanceRecords.filter(
+      record => record.status === "late"
+    ).length;
 
-        attendanceRate,
+  const absent =
+    attendanceRecords.filter(
+      record => record.status === "absent"
+    ).length;
 
-        favouriteSports:
-            user.favouriteSports,
+  const matchesAttended =
+    present + late;
 
-    };
+  const attendanceRate =
+    attendanceRecords.length === 0
+      ? 0
+      : Math.round(
+        (matchesAttended / attendanceRecords.length) * 100
+      );
+
+  return {
+
+    reliabilityScore:
+      user.reliabilityScore,
+
+    matchesHosted:
+      hosted,
+
+    matchesJoined:
+      joined,
+
+    matchesAttended,
+
+    attendanceRate,
+
+    attendance: {
+
+      present,
+
+      late,
+
+      absent,
+
+    },
+
+    upcomingActivities,
+
+    pendingRequests,
+
+    favouriteSports:
+      user.favouriteSports,
+
+  };
 
 };

@@ -71,16 +71,6 @@ const userSchema = new mongoose.Schema(
       default: 100,
     },
 
-    matchesJoined: {
-      type: Number,
-      default: 0,
-    },
-
-    matchesAttended: {
-      type: Number,
-      default: 0,
-    },
-
     isVerified: {
       type: Boolean,
       default: false,

@@ -1,38 +1,51 @@
+import Attendance from "../models/Attendance.model.js";
 import User from "../models/User.model.js";
 
 export const updateReliabilityScore = async (
-    userId,
-    status
+    userId
 ) => {
 
     const user = await User.findById(userId);
 
     if (!user) return;
 
-    switch (status) {
+    const attendanceRecords = await Attendance.find({
+        participant: userId,
+    });
 
-        case "present":
-            user.reliabilityScore = Math.min(
-                100,
-                user.reliabilityScore + 1
-            );
-            break;
+    const present =
+        attendanceRecords.filter(
+            record => record.status === "present"
+        ).length;
 
-        case "late":
-            user.reliabilityScore = Math.max(
-                0,
-                user.reliabilityScore - 2
-            );
-            break;
+    const late =
+        attendanceRecords.filter(
+            record => record.status === "late"
+        ).length;
 
-        case "absent":
-            user.reliabilityScore = Math.max(
-                0,
-                user.reliabilityScore - 10
-            );
-            break;
+    const absent =
+        attendanceRecords.filter(
+            record => record.status === "absent"
+        ).length;
+
+    const totalActivities =
+        present + late + absent;
+
+    if (totalActivities === 0) {
+
+        user.reliabilityScore = 100;
+
+    } else {
+
+        const earnedPoints =
+            present + (late * 0.75);
+
+        user.reliabilityScore = Math.round(
+            (earnedPoints / totalActivities) * 100
+        );
 
     }
 
     await user.save();
+
 };
