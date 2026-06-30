@@ -1,4 +1,4 @@
-// import { MapContainer, Marker, TileLayer, Circle } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Circle } from "react-leaflet";
 import { MapPin } from "lucide-react";
 import { ExternalLink} from "lucide-react";
 import "leaflet/dist/leaflet.css";
@@ -19,10 +19,10 @@ export default function ActivityMapCard({ activity }) {
   const latitude = activity.location.coordinates[1];
   const longitude = activity.location.coordinates[0];
 
-  // const position = {
-  //   lat: latitude,
-  //   lng: longitude,
-  // };
+  const position = {
+    lat: latitude,
+    lng: longitude,
+  };
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
 
@@ -54,7 +54,7 @@ export default function ActivityMapCard({ activity }) {
         </a>
 
       </div>
-      {/* <div className="px-6 pb-6">
+      <div className="px-6 pb-6">
         <div className="h-80 overflow-hidden rounded-2xl border border-zinc-200">
           <MapContainer
             center={position}
@@ -85,7 +85,7 @@ export default function ActivityMapCard({ activity }) {
           </MapContainer>
 
         </div>
-      </div> */}
+      </div>
       <div className="flex items-start gap-3 border-t border-zinc-100 p-6">
 
         <div className="rounded-2xl bg-green-50 p-3 text-green-700">

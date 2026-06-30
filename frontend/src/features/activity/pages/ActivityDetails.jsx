@@ -77,11 +77,11 @@ export default function ActivityDetails() {
         <ActivityStatsCard
           activity={activity}
         />
-
-        <ActivityMapCard
-          activity={activity}
-        />
-
+        <div className="relative isolate">
+          <ActivityMapCard
+            activity={activity}
+          />
+        </div>
         <GameDetailsCard
           activity={activity}
         />

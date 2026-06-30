@@ -9,3 +9,9 @@ body,
 body {
     @apply bg-white text-zinc-900;
 }
+
+.leaflet-control-attribution {
+  font-size: 6px;
+  opacity: 0.5;
+  background: transparent !important;
+}

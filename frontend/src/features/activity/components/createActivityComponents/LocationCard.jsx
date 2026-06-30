@@ -85,32 +85,33 @@ export default function LocationCard({
           <LocateFixedIcon />Use Current Location
         </button>
 
-        <LeafletMap
-          latitude={latitude}
-          longitude={longitude}
-          visibilityRadius={visibilityRadius}
-          onLocationSelect={async ({ lat, lng }) => {
-            setValue("latitude", lat, {
-              shouldValidate: true,
-              shouldDirty: true,
-            });
-
-            setValue("longitude", lng, {
-              shouldValidate: true,
-              shouldDirty: true,
-            });
-
-            const address = await getAddressFromCoordinates(lat, lng);
-
-            if (address) {
-              setValue("address", address, {
+        <div className="relative isolate">
+          <LeafletMap
+            latitude={latitude}
+            longitude={longitude}
+            visibilityRadius={visibilityRadius}
+            onLocationSelect={async ({ lat, lng }) => {
+              setValue("latitude", lat, {
                 shouldValidate: true,
                 shouldDirty: true,
               });
-            }
-          }}
-        />
 
+              setValue("longitude", lng, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+
+              const address = await getAddressFromCoordinates(lat, lng);
+
+              if (address) {
+                setValue("address", address, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }
+            }}
+          />
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-semibold">
