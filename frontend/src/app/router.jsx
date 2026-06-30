@@ -30,6 +30,7 @@ import EditProfile from "../features/profile/pages/EditProfile.jsx";
 import ChangePassword from "../features/profile/pages/ChangePassword.jsx";
 import DeleteAccount from "../features/profile/pages/DeleteAccount.jsx";
 import NotFound from "../pages/NotFound";
+import DashboardActivityList from "../features/dashboard/pages/DashboardActivityList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.PROFILE,
             element: <Profile />,
+          },
+          {
+            path : ROUTES.DASHBOARD_ACTIVITY_LIST,
+            element: <DashboardActivityList />
           },
           {
             path: "/profile/settings",

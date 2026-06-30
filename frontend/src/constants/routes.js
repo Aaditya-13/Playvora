@@ -26,6 +26,8 @@ const ROUTES = {
   CANCEL_ACTIVITY: "/activities/:id/cancel",
 
   COMPLETE_ACTIVITY: "/activities/:id/complete",
+
+  DASHBOARD_ACTIVITY_LIST: "/dashboard/:type",
 };
 
 export default ROUTES;

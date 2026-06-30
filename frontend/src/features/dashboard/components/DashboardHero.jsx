@@ -1,33 +1,32 @@
-import { LayoutDashboard } from "lucide-react";
-import useAuthStore from "../../../store/authStore";
+import Avatar from "../../../components/ui/Avatar";
 
-export default function DashboardHero() {
-  const { user } = useAuthStore();
-
+export default function DashboardHero({
+  user,
+}) {
   return (
-    <section className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+    <section className="rounded-[32px] bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 text-white shadow-lg">
 
       <div className="flex items-center gap-4">
 
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-50">
+        <Avatar
+          src={user?.avatar?.url}
+          alt={user?.fullName}
+          size={64}
+        />
 
-          <LayoutDashboard
-            size={28}
-            className="text-green-600"
-          />
+        <div className="min-w-0 flex-1">
 
-        </div>
+          <p className="text-sm font-medium text-emerald-100">
+            Welcome back 👋
+          </p>
 
-        <div>
-
-          <h1 className="text-2xl font-bold text-zinc-900">
-            Welcome back,
-            {" "}
-            {user?.fullName?.split(" ")[0]} 👋
+          <h1 className="mt-1 truncate text-2xl font-bold">
+            {user?.fullName}
           </h1>
 
-          <p className="mt-1 text-sm text-zinc-500">
-            Manage your hosted and joined activities.
+          <p className="mt-2 text-sm leading-6 text-emerald-100">
+            Manage your hosted and joined
+            activities from one place.
           </p>
 
         </div>
