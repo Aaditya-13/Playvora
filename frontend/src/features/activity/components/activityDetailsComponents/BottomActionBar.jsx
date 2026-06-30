@@ -63,8 +63,14 @@ export default function BottomActionBar({
         </Button>
 
         <Button
-          onClick={() =>
-            console.log("Manage Participants")
+          onClick={() => {
+            return navigate(
+              ROUTES.MANAGE_ACTIVITY.replace(
+                ":id",
+                activity._id
+              )
+            )
+          }
           }
         >
           Manage

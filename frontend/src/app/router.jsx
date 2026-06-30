@@ -18,8 +18,12 @@ import CreateActivity from "../features/activity/pages/CreateActivity";
 import Dashboard from "../features/dashboard/pages/Dashboard";
 import Profile from "../features/profile/pages/Profile";
 import EditActivity from "../features/activity/pages/EditActivity";
-
+import ManageActivity from "../features/activity/pages/ManageActivity.jsx";
+import Attendance from "../features/activity/pages/Attendance.jsx";
+import JoinRequests from "../features/activity/pages/JoinRequests.jsx";
 import ActivityDetails from "../features/activity/pages/ActivityDetails.jsx";
+import CancelActivity from "../features/activity/pages/CancelActivity.jsx";
+import CompleteActivity from "../features/activity/pages/CompleteActivity.jsx";
 
 import Settings from "../features/profile/pages/Settings.jsx"
 import EditProfile from "../features/profile/pages/EditProfile.jsx";
@@ -76,6 +80,26 @@ const router = createBrowserRouter([
           {
             path: ROUTES.EDIT_ACTIVITY,
             element: <EditActivity />,
+          },
+          {
+            path: ROUTES.MANAGE_ACTIVITY,
+            element: <ManageActivity />
+          },
+          {
+            path: ROUTES.JOIN_REQUESTS,
+            element: <JoinRequests />
+          },
+          {
+            path: ROUTES.ATTENDANCE,
+            element: <Attendance />
+          },
+          {
+            path: ROUTES.CANCEL_ACTIVITY,
+            element: <CancelActivity />,
+          },
+          {
+            path: ROUTES.COMPLETE_ACTIVITY,
+            element: <CompleteActivity />,
           },
           {
             path: ROUTES.DASHBOARD,

@@ -43,3 +43,20 @@ export const updateActivity = async (
 
   return response.data;
 };
+
+
+export const cancelActivity = async (activityId) => {
+  const { data } = await api.patch(
+    `/activities/${activityId}/cancel`
+  );
+
+  return data;
+};
+
+export const completeActivity = async (activityId) => {
+  const { data } = await api.patch(
+    `/activities/${activityId}/complete`
+  );
+
+  return data;
+};

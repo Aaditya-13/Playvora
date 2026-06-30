@@ -18,6 +18,14 @@ const ROUTES = {
   EDIT_ACTIVITY: "/activities/:id/edit",
 
   MANAGE_ACTIVITY: "/activities/:id/manage",
+
+  JOIN_REQUESTS: "/activities/:id/requests",
+
+  ATTENDANCE: "/activities/:id/attendance",
+
+  CANCEL_ACTIVITY: "/activities/:id/cancel",
+
+  COMPLETE_ACTIVITY: "/activities/:id/complete",
 };
 
 export default ROUTES;
