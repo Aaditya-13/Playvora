@@ -1,5 +1,6 @@
 import Activity from "../models/Activity.model.js";
 import ApiError from "../utils/ApiError.js";
+import { attachAttendance } from "./activityResponse.service.js";
 
 
 export const createActivityService = async (
@@ -149,27 +150,37 @@ export const getActivityByIdService = async (activityId) => {
 
 export const getMyCreatedActivitiesService = async (userId) => {
 
-  return await Activity.find({
-    organizer: userId,
-    isDeleted: false,
-  }).sort({
-    scheduledAt: 1,
-  });
+    const activities = await Activity.find({
+        organizer: userId,
+        isDeleted: false,
+    }).sort({
+        scheduledAt: 1,
+    });
+
+    return await attachAttendance(
+        activities,
+        userId
+    );
 
 };
 
 
 export const getMyJoinedActivitiesService = async (userId) => {
 
-  return await Activity.find({
-    participants: userId,
-    organizer: {
-      $ne: userId,
-    },
-    isDeleted: false,
-  }).sort({
-    scheduledAt: 1,
-  });
+    const activities = await Activity.find({
+        participants: userId,
+        organizer: {
+            $ne: userId,
+        },
+        isDeleted: false,
+    }).sort({
+        scheduledAt: 1,
+    });
+
+    return await attachAttendance(
+        activities,
+        userId
+    );
 
 };
 
