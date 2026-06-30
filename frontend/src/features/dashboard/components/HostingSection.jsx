@@ -35,20 +35,21 @@ export default function HostingSection({
             key={activity._id}
             activity={activity}
             secondaryAction={{
-              label: "View",
+              label: "Edit",
               onClick: () =>
                 navigate(
-                  ROUTES.ACTIVITY_DETAILS.replace(
+                  ROUTES.EDIT_ACTIVITY.replace(
                     ":id",
                     activity._id
                   )
                 ),
             }}
+
             primaryAction={{
-              label: "Edit",
+              label: "Manage",
               onClick: () =>
                 navigate(
-                  ROUTES.EDIT_ACTIVITY.replace(
+                  ROUTES.MANAGE_ACTIVITY.replace(
                     ":id",
                     activity._id
                   )

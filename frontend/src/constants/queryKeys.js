@@ -12,6 +12,10 @@ const QUERY_KEYS = {
   SEARCH: ["search"],
 
   USER_STATS: ["user-stats"],
+
+  JOIN_REQUESTS: ["join-requests"],
+
+  ATTENDANCE: ["attendance"],
 };
 
 export default QUERY_KEYS;
