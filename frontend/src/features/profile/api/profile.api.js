@@ -56,3 +56,19 @@ export const deleteAccount = async (payload) => {
 
   return response.data;
 };
+
+
+export const getProfileData = async () => {
+  const [
+    userResponse,
+    statsResponse,
+  ] = await Promise.all([
+    api.get("/auth/me"),
+    api.get("/users/me/stats"),
+  ]);
+
+  return {
+    user: userResponse.data.data,
+    stats: statsResponse.data.data,
+  };
+};

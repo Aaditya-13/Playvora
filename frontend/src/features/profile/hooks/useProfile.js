@@ -1,11 +1,12 @@
-import useAuthStore from "../../../store/authStore.js";
+import { useQuery } from "@tanstack/react-query";
+
+import QUERY_KEYS from "../../../constants/queryKeys";
+import { getProfileData } from "../api/profile.api";
 
 export default function useProfile() {
-  const { user } = useAuthStore();
-
-  return {
-    user,
-    isLoading: false,
-    isError: false,
-  };
+  return useQuery({
+    queryKey: QUERY_KEYS.PROFILE,
+    queryFn: getProfileData,
+    staleTime: 5 * 60 * 1000,
+  });
 }

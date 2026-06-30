@@ -1,60 +1,71 @@
 import ScreenContainer from "../../../components/ui/ScreenContainer";
-import PageHeader from "../../../components/ui/PageHeader";
 
-import useProfile from "../hooks/useProfile";
-
-import ProfileHero from "../components/ProfileHero";
-import ProfileInfoCard from "../components/ProfileInfoCard";
+import ProfileHeader from "../components/ProfileHeader";
+import PersonalInformation from "../components/PersonalInformation";
 import ProfileStats from "../components/ProfileStats";
 import QuickActionsCard from "../components/QuickActionsCard";
-
 import ProfileLoading from "../components/ProfileLoading";
 import ProfileError from "../components/ProfileError";
-import useLogout from "../hooks/useLogout";
+
+import useProfile from "../hooks/useProfile";
+import useLogout from "../hooks/useLogout"
 
 export default function Profile() {
-
-
   const {
-    user,
+    data,
     isLoading,
     isError,
+    refetch,
   } = useProfile();
 
-  const {
+    const {
     mutate: logout,
     isPending: isLoggingOut,
   } = useLogout();
 
-
   if (isLoading) {
     return (
-      <ScreenContainer className="bg-zinc-50">
-        <ProfileLoading />
+      <ScreenContainer className="min-h-screen bg-zinc-100 pb-24">
+        <div className="mx-auto max-w-3xl px-4 py-5">
+          <ProfileLoading />
+        </div>
       </ScreenContainer>
     );
   }
 
-  if (isError || !user) {
+  if (isError) {
     return (
-      <ScreenContainer className="bg-zinc-50">
-        <ProfileError onRetry={() => window.location.reload()} />
+      <ScreenContainer className="min-h-screen bg-zinc-100 pb-24">
+        <div className="mx-auto max-w-3xl px-4 py-5">
+          <ProfileError
+            onRetry={refetch}
+          />
+        </div>
       </ScreenContainer>
     );
   }
+
+  const {
+    user,
+    stats,
+  } = data;
 
   return (
-    <ScreenContainer className="bg-zinc-50 pb-24">
+    <ScreenContainer className="min-h-screen bg-zinc-100 pb-24">
 
-      <PageHeader title="Profile" />
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-5">
 
-      <div className="mx-auto mt-6 flex max-w-4xl flex-col gap-8 px-4">
+        <ProfileHeader
+          user={user}
+        />
 
-        <ProfileHero user={user} />
+        <PersonalInformation
+          user={user}
+        />
 
-        <ProfileInfoCard user={user} />
-
-        <ProfileStats user={user} />
+        <ProfileStats
+          stats={stats}
+        />
 
         <QuickActionsCard
           onLogout={logout}

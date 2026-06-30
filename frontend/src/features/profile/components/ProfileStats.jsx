@@ -1,66 +1,65 @@
 import {
   Trophy,
-  Users,
-  CalendarCheck,
+  TrendingUp,
 } from "lucide-react";
 
-export default function ProfileStats({ user }) {
-  const stats = [
-    {
-      title: "Hosted",
-      value: user?.matchesHosted ?? 0,
-      icon: Trophy,
-    },
-    {
-      title: "Joined",
-      value: user?.matchesJoined ?? 0,
-      icon: Users,
-    },
-    {
-      title: "Attended",
-      value: user?.matchesAttended ?? 0,
-      icon: CalendarCheck,
-    },
-  ];
+export default function ProfileStats({
+  stats,
+}) {
+  const totalActivities =
+    (stats?.matchesHosted ?? 0) +
+    (stats?.matchesJoined ?? 0);
 
   return (
-    <section>
+    <section className="space-y-4">
 
-      <h2 className="mb-4 text-lg font-bold">
-        Statistics
+      <h2 className="text-xl font-bold text-zinc-900">
+        Activity Summary
       </h2>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
 
-        {stats.map((stat) => {
-          const Icon = stat.icon;
+        <div className="rounded-[28px] border border-zinc-200 bg-white p-5 shadow-sm">
 
-          return (
-            <div
-              key={stat.title}
-              className="rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm"
-            >
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
 
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-50">
+            <Trophy
+              size={22}
+              className="text-emerald-600"
+            />
 
-                <Icon
-                  size={22}
-                  className="text-green-600"
-                />
+          </div>
 
-              </div>
+          <p className="mt-5 text-3xl font-bold text-zinc-900">
+            {totalActivities}
+          </p>
 
-              <h3 className="text-3xl font-bold">
-                {stat.value}
-              </h3>
+          <p className="mt-1 text-sm text-zinc-500">
+            Total Activities
+          </p>
 
-              <p className="mt-1 text-sm text-zinc-500">
-                {stat.title}
-              </p>
+        </div>
 
-            </div>
-          );
-        })}
+        <div className="rounded-[28px] border border-zinc-200 bg-white p-5 shadow-sm">
+
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+
+            <TrendingUp
+              size={22}
+              className="text-blue-600"
+            />
+
+          </div>
+
+          <p className="mt-5 text-3xl font-bold text-zinc-900">
+            {stats?.attendanceRate ?? 0}%
+          </p>
+
+          <p className="mt-1 text-sm text-zinc-500">
+            Attendance Rate
+          </p>
+
+        </div>
 
       </div>
 
