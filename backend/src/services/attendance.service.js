@@ -5,82 +5,142 @@ import ApiError from "../utils/ApiError.js";
 import { updateReliabilityScore } from "./reliability.service.js";
 
 export const markAttendanceService = async (
-    activityId,
-    organizerId,
-    attendanceList
+  activityId,
+  organizerId,
+  attendanceList
 ) => {
 
-    const activity = await Activity.findById(activityId);
+  const activity = await Activity.findById(activityId);
 
-    if (!activity || activity.isDeleted) {
-        throw new ApiError(404, "Activity not found");
-    }
+  if (!activity || activity.isDeleted) {
+    throw new ApiError(404, "Activity not found");
+  }
+
+  if (
+    activity.organizer.toString() !==
+    organizerId.toString()
+  ) {
+    throw new ApiError(
+      403,
+      "Only organizer can mark attendance."
+    );
+  }
+
+  if (new Date() < activity.scheduledAt) {
+    throw new ApiError(
+      400,
+      "Attendance can only be marked after the activity starts."
+    );
+  }
+
+  for (const record of attendanceList) {
 
     if (
-        activity.organizer.toString() !==
-        organizerId.toString()
+      !activity.participants.some(
+        participant =>
+          participant.toString() ===
+          record.participantId
+      )
     ) {
-        throw new ApiError(
-            403,
-            "Only organizer can mark attendance."
-        );
+      throw new ApiError(
+        400,
+        "Participant not found in activity."
+      );
     }
 
-    if (
-        activity.scheduledAt > new Date()
-    ) {
-        throw new ApiError(
-            400,
-            "Activity has not finished yet."
-        );
-    }
+    await Attendance.findOneAndUpdate(
+      {
+        activity: activityId,
+        participant: record.participantId,
+      },
+      {
+        status: record.status,
+        markedBy: organizerId,
+        markedAt: new Date(),
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
 
-    for (const record of attendanceList) {
+    await updateReliabilityScore(
+      record.participantId,
+      record.status
+    );
+  }
 
-        if (
-            !activity.participants.some(
-                participant =>
-                    participant.toString() ===
-                    record.participantId
-            )
-        ) {
-            throw new ApiError(
-                400,
-                "Participant not found in activity."
-            );
-        }
-
-        await Attendance.create({
-
-            activity: activityId,
-
-            participant: record.participantId,
-
-            status: record.status,
-
-            markedBy: organizerId,
-
-        });
-
-        await updateReliabilityScore(
-            record.participantId,
-            record.status
-        );
-    }
-
-    return;
+  return;
 };
 
 export const getAttendanceService = async (
-    activityId
+  activityId
 ) => {
 
-    return await Attendance.find({
-        activity: activityId,
-    })
+  const activity = await Activity.findById(activityId)
     .populate(
-        "participant",
-        "username fullName avatar reliabilityScore"
+      "participants",
+      "username fullName avatar reliabilityScore"
     );
+
+  if (!activity || activity.isDeleted) {
+    throw new ApiError(
+      404,
+      "Activity not found."
+    );
+  }
+
+  const attendanceRecords = await Attendance.find({
+    activity: activityId,
+  });
+
+  const attendanceMap = new Map();
+
+  attendanceRecords.forEach(record => {
+    attendanceMap.set(
+      record.participant.toString(),
+      {
+        status: record.status,
+        markedAt: record.markedAt,
+      }
+    );
+  });
+
+  const participants = activity.participants.map(participant => {
+
+    const attendance =
+      attendanceMap.get(
+        participant._id.toString()
+      );
+
+    return {
+
+      participant,
+
+      status: attendance?.status ?? null,
+
+      markedAt: attendance?.markedAt ?? null,
+
+    };
+
+  });
+
+  return {
+
+    activity: {
+
+      _id: activity._id,
+
+      title: activity.title,
+
+      scheduledAt: activity.scheduledAt,
+
+    },
+
+    totalParticipants: participants.length,
+
+    participants,
+
+  };
 
 };
