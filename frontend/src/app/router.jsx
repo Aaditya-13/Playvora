@@ -29,6 +29,7 @@ import Settings from "../features/profile/pages/Settings.jsx"
 import EditProfile from "../features/profile/pages/EditProfile.jsx";
 import ChangePassword from "../features/profile/pages/ChangePassword.jsx";
 import DeleteAccount from "../features/profile/pages/DeleteAccount.jsx";
+import SavedLocation from "../features/profile/pages/SavedLocation.jsx";
 import NotFound from "../pages/NotFound";
 import DashboardActivityList from "../features/dashboard/pages/DashboardActivityList.jsx";
 
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
           {
             path : ROUTES.DASHBOARD_ACTIVITY_LIST,
             element: <DashboardActivityList />
+          },
+          {
+            path: ROUTES.PROFILE_SAVED_LOCATION,
+            element: <SavedLocation />
           },
           {
             path: "/profile/settings",

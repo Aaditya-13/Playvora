@@ -28,6 +28,8 @@ const ROUTES = {
   COMPLETE_ACTIVITY: "/activities/:id/complete",
 
   DASHBOARD_ACTIVITY_LIST: "/dashboard/:type",
+
+  PROFILE_SAVED_LOCATION: "/profile/location",
 };
 
 export default ROUTES;

@@ -1,50 +1,45 @@
-import { useEffect, useState } from "react";
-
-const DEFAULT_LOCATION = {
-  latitude: 20.0059,
-  longitude: 73.791,
-};
+import { useState, useCallback } from "react";
 
 export default function useCurrentLocation() {
-  const [location, setLocation] =
-    useState(DEFAULT_LOCATION);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [error, setError] = useState(
-    navigator.geolocation
-      ? null
-      : "Geolocation is not supported."
-  );
-
-  const [isLoading, setIsLoading] = useState(
-    !!navigator.geolocation
-  );
-
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        setLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-
-        setIsLoading(false);
-      },
-      (err) => {
-        setError(err.message);
-        setIsLoading(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000,
+  const getCurrentLocation = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        const err = new Error("Geolocation is not supported.");
+        setError(err);
+        reject(err);
+        return;
       }
-    );
+
+      setIsLoading(true);
+      setError(null);
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setIsLoading(false);
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (err) => {
+          setIsLoading(false);
+          setError(err);
+          reject(err);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        }
+      );
+    });
   }, []);
 
   return {
-    ...location,
+    getCurrentLocation,
+    requestBrowserLocation: getCurrentLocation,
     isLoading,
     error,
   };

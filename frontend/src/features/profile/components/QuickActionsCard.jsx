@@ -3,8 +3,10 @@ import {
   LogOut,
   Pencil,
   Settings,
+  MapPinned
 } from "lucide-react";
 import { useNavigate } from "react-router";
+import ROUTES from "../../../constants/routes";
 
 export default function QuickActionsCard({
   onLogout,
@@ -22,6 +24,12 @@ export default function QuickActionsCard({
       title: "Settings",
       icon: Settings,
       onClick: () => navigate("/profile/settings"),
+    },
+    {
+    title: "Saved Location",
+    icon: MapPinned,
+    onClick: () =>
+      navigate(ROUTES.PROFILE_SAVED_LOCATION),
     },
     {
       title: isLoggingOut

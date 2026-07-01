@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import BottomNavigation from "../../../components/shared/BottomNavigation";
 
@@ -11,43 +11,51 @@ import ActivitySkeleton from "../components/ActivitySkeleton";
 import EmptyState from "../components/EmptyState";
 
 import useNearbyActivities from "../hooks/useNearbyActivities";
-import useCurrentLocation from "../../../hooks/useCurrentLocation";
-import useCurrentUser from "../../auth/hooks/useCurrentUser"
+import useLocation from "../../../hooks/useLocation";
+import useCurrentUser from "../../auth/hooks/useCurrentUser";
 
 export default function Home() {
+  const query = useCurrentUser();
+  const user = query.data?.data;
 
-const query = useCurrentUser();
+  const { getLocation } = useLocation();
 
-const user = query.data?.data;
-
-  
-  
   const [selectedSport, setSelectedSport] =
     useState("");
 
-  const {
-    latitude,
-    longitude,
-  } = useCurrentLocation();
+  const [location, setLocation] =
+    useState(null);
+  useEffect(() => {
+    async function loadLocation() {
+      const currentLocation = await getLocation();
+
+      if (currentLocation) {
+        setLocation(currentLocation);
+      }
+    }
+
+    loadLocation();
+  }, [getLocation]);
 
   const {
     data,
     isLoading,
   } = useNearbyActivities({
-    latitude,
-    longitude,
+    latitude: location?.latitude,
+    longitude: location?.longitude,
     sport: selectedSport,
   });
 
-  const activities = data?.data?.activities ?? [];
+  const activities =
+    data?.data?.activities ?? [];
 
   return (
     <main className="min-h-screen bg-zinc-50 pb-24">
 
       <section className="mx-auto max-w-5xl px-4 py-6">
 
-        <HomeHeader 
-        user={user}
+        <HomeHeader
+          user={user}
         />
 
         <SearchEntryCard />
