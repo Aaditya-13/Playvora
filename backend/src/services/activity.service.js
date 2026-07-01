@@ -150,37 +150,37 @@ export const getActivityByIdService = async (activityId) => {
 
 export const getMyCreatedActivitiesService = async (userId) => {
 
-    const activities = await Activity.find({
-        organizer: userId,
-        isDeleted: false,
-    }).sort({
-        scheduledAt: 1,
-    });
+  const activities = await Activity.find({
+    organizer: userId,
+    isDeleted: false,
+  }).sort({
+    scheduledAt: 1,
+  });
 
-    return await attachAttendance(
-        activities,
-        userId
-    );
+  return await attachAttendance(
+    activities,
+    userId
+  );
 
 };
 
 
 export const getMyJoinedActivitiesService = async (userId) => {
 
-    const activities = await Activity.find({
-        participants: userId,
-        organizer: {
-            $ne: userId,
-        },
-        isDeleted: false,
-    }).sort({
-        scheduledAt: 1,
-    });
+  const activities = await Activity.find({
+    participants: userId,
+    organizer: {
+      $ne: userId,
+    },
+    isDeleted: false,
+  }).sort({
+    scheduledAt: 1,
+  });
 
-    return await attachAttendance(
-        activities,
-        userId
-    );
+  return await attachAttendance(
+    activities,
+    userId
+  );
 
 };
 
@@ -190,21 +190,46 @@ export const updateActivityService = async (
   userId,
   payload
 ) => {
-
-  const activity = await Activity.findById(activityId);
+  const activity =
+    await Activity.findById(activityId);
 
   if (!activity || activity.isDeleted) {
-    throw new ApiError(404, "Activity not found");
+    throw new ApiError(
+      404,
+      "Activity not found"
+    );
   }
 
-  if (activity.organizer.toString() !== userId.toString()) {
+  if (
+    activity.organizer.toString() !==
+    userId.toString()
+  ) {
     throw new ApiError(
       403,
       "Only organizer can update activity"
     );
   }
 
-  Object.assign(activity, payload);
+  const {
+    latitude,
+    longitude,
+    ...rest
+  } = payload;
+
+  Object.assign(activity, rest);
+
+  if (
+    latitude !== undefined &&
+    longitude !== undefined
+  ) {
+    activity.location = {
+      type: "Point",
+      coordinates: [
+        longitude,
+        latitude,
+      ],
+    };
+  }
 
   await activity.save();
 
