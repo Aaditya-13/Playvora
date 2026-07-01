@@ -16,6 +16,8 @@ const QUERY_KEYS = {
   JOIN_REQUESTS: ["join-requests"],
 
   ATTENDANCE: ["attendance"],
+
+  ACTIVITY_DETAILS: ["activity-details"],
 };
 
 export default QUERY_KEYS;

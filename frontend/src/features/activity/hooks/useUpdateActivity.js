@@ -27,14 +27,17 @@ export default function useUpdateActivity(activityId) {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["activity", activityId],
+        queryKey: [
+          ...QUERY_KEYS.ACTIVITY_DETAILS,
+          activityId,
+        ],
       });
     },
 
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ??
-          "Failed to update activity."
+        "Failed to update activity."
       );
     },
   });

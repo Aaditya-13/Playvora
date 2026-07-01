@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
+import ROUTES from "../../../constants/routes"
+
+import useLocation from "../../../hooks/useLocation";
 
 import { createActivitySchema } from "../validation/activity.schema";
 import useActivityDetails from "./useActivityDetails";
@@ -45,6 +48,8 @@ export const GENDER_OPTIONS = [
 
 export default function useEditActivityForm(activityId) {
   const navigate = useNavigate();
+
+  const { getLocation } = useLocation();
 
   const { mutate: update, isPending } =
     useUpdateActivity(activityId);
@@ -174,41 +179,45 @@ export default function useEditActivityForm(activityId) {
   });
 
 
-  const useCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported.");
-      return;
-    }
+  const useCurrentLocation = async () => {
+    try {
+      const location = await getLocation();
 
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        setValue("latitude", coords.latitude, {
-          shouldValidate: true,
-        });
+      if (!location) {
+        toast.error("No location available.");
+        return;
+      }
 
-        setValue("longitude", coords.longitude, {
-          shouldValidate: true,
-        });
+      setValue("latitude", location.latitude, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
 
-        const address = await getAddressFromCoordinates(
-          coords.latitude,
-          coords.longitude
+      setValue("longitude", location.longitude, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+
+      const address =
+        await getAddressFromCoordinates(
+          location.latitude,
+          location.longitude
         );
 
-        if (address) {
-          setValue("address", address, {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        }
-
-        toast.success("Current location detected.");
-      },
-      () => {
-        toast.error("Unable to fetch your location.");
+      if (address) {
+        setValue("address", address, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       }
-    );
+
+      toast.success("Location updated.");
+    } catch {
+      toast.error("Unable to fetch location.");
+    }
   };
+
+
   const searchLocation = async () => {
     const address = form.getValues("address");
 
@@ -225,10 +234,12 @@ export default function useEditActivityForm(activityId) {
     }
 
     setValue("latitude", coordinates.latitude, {
+      shouldDirty: true,
       shouldValidate: true,
     });
 
     setValue("longitude", coordinates.longitude, {
+      shouldDirty: true,
       shouldValidate: true,
     });
 
@@ -295,7 +306,7 @@ export default function useEditActivityForm(activityId) {
       onSuccess: () => {
         toast.success("Activity updated successfully.");
 
-        navigate(`/activities/${activityId}`);
+        navigate(ROUTES.DASHBOARD);
       },
 
       onError: (error) => {
