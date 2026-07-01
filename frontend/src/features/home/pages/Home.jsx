@@ -12,11 +12,12 @@ import EmptyState from "../components/EmptyState";
 
 import useNearbyActivities from "../hooks/useNearbyActivities";
 import useLocation from "../../../hooks/useLocation";
-import useCurrentUser from "../../auth/hooks/useCurrentUser";
+import useAuthStore from "../../../store/authStore";
 
 export default function Home() {
-  const query = useCurrentUser();
-  const user = query.data?.data;
+  const user = useAuthStore(
+    (state) => state.user
+  );
 
   const { getLocation } = useLocation();
 
