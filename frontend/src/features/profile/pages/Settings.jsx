@@ -3,12 +3,18 @@ import PageHeader from "../../../components/ui/PageHeader";
 
 import SecurityCard from "../components/SecurityCard";
 import DangerZoneCard from "../components/DangerZoneCard";
+import BackButton from "../../../components/ui/BackButton";
 
 export default function Settings() {
   return (
     <ScreenContainer className="bg-zinc-50 pb-24">
 
-      <PageHeader title="Settings" />
+      <PageHeader 
+        title="Settings"
+        leftNode={
+          <BackButton />
+        } 
+      />
 
       <div className="mx-auto mt-6 flex max-w-3xl flex-col gap-6 px-4">
 

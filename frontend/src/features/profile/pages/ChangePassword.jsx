@@ -5,6 +5,7 @@ import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
+import BackButton from "../../../components/ui/BackButton";
 
 import { changePasswordSchema } from "../validation/changePassword.schema";
 
@@ -27,7 +28,12 @@ export default function ChangePassword() {
   return (
     <ScreenContainer className="bg-zinc-50 pb-20">
 
-      <PageHeader title="Change Password" />
+      <PageHeader 
+        title="Change Password" 
+        leftNode={
+          <BackButton />
+        }
+      />
 
       <form
         onSubmit={handleSubmit(mutate)}

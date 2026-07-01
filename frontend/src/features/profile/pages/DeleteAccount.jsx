@@ -7,6 +7,7 @@ import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
+import BackButton from "../../../components/ui/BackButton";
 
 import { deleteAccountSchema } from "../validation/deleteAccount.schema";
 
@@ -29,7 +30,12 @@ export default function DeleteAccount() {
   return (
     <ScreenContainer className="bg-zinc-50 pb-20">
 
-      <PageHeader title="Delete Account" />
+      <PageHeader 
+        title="Delete Account"
+        leftNode={
+          <BackButton />
+        } 
+      />
 
       <form
         onSubmit={handleSubmit(mutate)}

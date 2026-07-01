@@ -1,8 +1,8 @@
-import { ArrowLeft } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
+import BackButton from "../../../components/ui/BackButton";
 
 import useEditActivityForm from "../hooks/useEditActivityForm";
 
@@ -17,7 +17,6 @@ import NotesCard from "../components/createActivityComponents/NotesCard";
 import PublishBar from "../components/createActivityComponents/PublishBar";
 
 export default function EditActivity() {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const {
@@ -53,12 +52,7 @@ export default function EditActivity() {
       <PageHeader
         title="Edit Activity"
         leftNode={
-          <button
-            onClick={() => navigate(-1)}
-            className="rounded-full p-2 transition hover:bg-zinc-100"
-          >
-            <ArrowLeft size={22} />
-          </button>
+        <BackButton />
         }
       />
 

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
+import BackButton from "../../../components/ui/BackButton";
 
 import EditProfileHero from "../components/EditProfileHero";
 import BasicInfoCard from "../components/BasicInfoCard";
@@ -36,7 +37,12 @@ export default function EditProfile() {
   return (
     <ScreenContainer className="bg-zinc-50 pb-28">
 
-      <PageHeader title="Edit Profile" />
+      <PageHeader 
+        title="Edit Profile"
+        leftNode={
+          <BackButton />
+        } 
+      />
 
       <form
         id="edit-profile-form"

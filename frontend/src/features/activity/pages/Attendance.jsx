@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Calendar, Users } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { Calendar, Users } from "lucide-react";
+import { useParams } from "react-router";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
 import Button from "../../../components/ui/Button";
+import BackButton from "../../../components/ui/BackButton";
 
 import useAttendance from "../hooks/useAttendance";
 import useMarkAttendance from "../hooks/useMarkAttendance";
@@ -14,7 +15,6 @@ import useMarkAttendance from "../hooks/useMarkAttendance";
 import AttendanceRow from "../components/attendanceComponents/AttendanceRow";
 
 export default function Attendance() {
-  const navigate = useNavigate();
   const { id } = useParams();
 
   const { data, isLoading } = useAttendance(id);
@@ -90,12 +90,7 @@ export default function Attendance() {
       <PageHeader
         title="Attendance"
         leftNode={
-          <button
-            onClick={() => navigate(-1)}
-            className="rounded-full p-2 transition hover:bg-zinc-100"
-          >
-            <ArrowLeft size={22} />
-          </button>
+          <BackButton />
         }
       />
 

@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
+import BackButton from "../../../components/ui/BackButton";
 
 import useActivityDetails from "../hooks/useActivityDetails";
 import useJoinActivity from "../hooks/useJoinActivity";
@@ -65,7 +66,12 @@ export default function ActivityDetails() {
   return (
     <ScreenContainer className="bg-zinc-50 pb-28">
 
-      <PageHeader title="Activity Details" />
+      <PageHeader 
+        title="Activity Details" 
+        leftNode={
+          <BackButton />
+        }
+      />
 
       <div className="mx-auto mt-6 flex max-w-5xl flex-col gap-6">
 
