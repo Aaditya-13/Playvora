@@ -14,7 +14,7 @@ import {
     loginLimiter,
     registerLimiter,
     guestLimiter,
-} from "../middlewares/rateLimit.middleware.js";
+} from "../middleware/rateLimit.middleware.js";
 
 import verifyJWT from "../middleware/auth.middleware.js";
 import validate from "../middleware/validate.middleware.js";

@@ -7,7 +7,7 @@ import env from "./config/env.js";
 import helmet from "helmet";
 import compression from "compression";
 
-import { generalLimiter } from "./middlewares/rateLimit.middleware.js";
+import { generalLimiter } from "./middleware/rateLimit.middleware.js";
 
 const app = express();
 

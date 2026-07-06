@@ -10,7 +10,7 @@ const defaultHandler = (req, res) => {
 
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 200,
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
@@ -25,7 +25,7 @@ export const generalLimiter = rateLimit({
 
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 5,
+  limit: 15,
   standardHeaders: true,
   legacyHeaders: false,
   handler: defaultHandler,
@@ -33,7 +33,7 @@ export const loginLimiter = rateLimit({
 
 export const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  limit: 3,
+  limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
   handler: defaultHandler,
