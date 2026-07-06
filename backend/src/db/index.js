@@ -3,7 +3,9 @@ import env from "../config/env.js";
 
 const connectDB = async () => {
     try {
-        const connectionInstance = await mongoose.connect(env.MONGODB_URI);
+        const connectionInstance = await mongoose.connect(env.MONGODB_URI, {
+          dbName: "playvora",
+        });
 
         console.log(
             `✅ MongoDB Connected: ${connectionInstance.connection.host}`

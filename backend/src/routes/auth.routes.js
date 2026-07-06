@@ -10,6 +10,12 @@ import {
     guestLogin
 } from "../controllers/auth.controller.js";
 
+import {
+    loginLimiter,
+    registerLimiter,
+    guestLimiter,
+} from "../middlewares/rateLimit.middleware.js";
+
 import verifyJWT from "../middleware/auth.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 
@@ -24,6 +30,7 @@ const router = Router();
 router.post(
     "/register",
     validate(registerSchema),
+    registerLimiter,
     registerUser
 );
 
@@ -31,11 +38,13 @@ router.post(
 router.post(
     "/login",
     validate(loginSchema),
+    loginLimiter,
     loginUser
 );
 
 router.post(
     "/guest",
+    guestLimiter,
     guestLogin
 );
 

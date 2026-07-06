@@ -4,7 +4,11 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/error.middleware.js";
 import env from "./config/env.js";
 
+import { generalLimiter } from "./middlewares/rateLimit.middleware.js";
+
 const app = express();
+
+app.set("trust proxy", 1);
 
 app.use(
     cors({
@@ -25,6 +29,9 @@ app.use(cookieParser());
 
 app.use(express.static("public"));
 
+if (env.ENABLE_RATE_LIMIT) {
+  app.use("/api/v1", generalLimiter);
+}
 
 app.get("/health", (req, res) => {
     res.status(200).json({

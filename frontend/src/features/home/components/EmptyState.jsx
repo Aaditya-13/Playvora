@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 
 import Button from "../../../components/ui/Button";
 
+import ROUTES from "../../../constants/routes.js";
+
 export default function EmptyState() {
   const navigate = useNavigate();
 
@@ -25,8 +27,9 @@ export default function EmptyState() {
 
       <Button
         className="mt-6"
+        type="button"
         onClick={() =>
-          navigate("/activities/create")
+          navigate(ROUTES.CREATE)
         }
       >
         Create Activity
