@@ -4,11 +4,20 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/error.middleware.js";
 import env from "./config/env.js";
 
+import helmet from "helmet";
+import compression from "compression";
+
 import { generalLimiter } from "./middlewares/rateLimit.middleware.js";
 
 const app = express();
 
 app.set("trust proxy", 1);
+
+app.use(
+    helmet({
+        crossOriginResourcePolicy: false,
+    })
+);
 
 app.use(
     cors({
@@ -28,6 +37,8 @@ app.use(
 app.use(cookieParser());
 
 app.use(express.static("public"));
+
+app.use(compression());
 
 if (env.ENABLE_RATE_LIMIT) {
   app.use("/api/v1", generalLimiter);
