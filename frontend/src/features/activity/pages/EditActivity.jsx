@@ -83,11 +83,6 @@ export default function EditActivity() {
           useCurrentLocation={useCurrentLocation}
         />
 
-        <ScheduleCard
-          register={register}
-          errors={errors}
-        />
-
         <GameSettingsCard
           register={register}
           errors={errors}
@@ -100,6 +95,11 @@ export default function EditActivity() {
           JOIN_POLICIES={JOIN_POLICIES}
           GENDER_OPTIONS={GENDER_OPTIONS}
           setValue={setValue}
+        />
+
+        <ScheduleCard
+          register={register}
+          errors={errors}
         />
 
         <PricingCard

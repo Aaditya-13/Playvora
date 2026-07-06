@@ -112,7 +112,7 @@ export default function LocationCard({
             }}
           />
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        {/* <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-semibold">
               Latitude
@@ -136,7 +136,7 @@ export default function LocationCard({
               className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-100 px-4"
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-2 rounded-xl bg-green-50 p-4 text-sm text-green-700">
           <CheckCircle2 size={18} />

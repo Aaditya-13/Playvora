@@ -14,14 +14,15 @@ export default function useUpdateFavouriteSports() {
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.BOOTSTRAP,
       });
-
-      toast.success("Favourite sports updated.");
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.PROFILE,
+      });
     },
 
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to update favourite sports."
+        "Failed to update favourite sports."
       );
     },
   });

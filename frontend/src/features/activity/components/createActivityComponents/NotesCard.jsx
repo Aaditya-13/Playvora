@@ -30,7 +30,7 @@ export default function NotesCard({
       <textarea
         rows={5}
         {...register("notes")}
-        placeholder="Bring football shoes, carry water, meet near Gate 2..."
+        placeholder="Bring football shoes, carry water, my contact number..."
         className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 p-4 outline-none transition focus:border-green-600 focus:bg-white"
       />
 

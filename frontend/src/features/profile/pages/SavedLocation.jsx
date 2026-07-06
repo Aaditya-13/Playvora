@@ -211,7 +211,7 @@ export default function SavedLocation() {
 
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {/* <div className="mt-6 grid gap-4 md:grid-cols-2">
 
             <div>
 
@@ -241,7 +241,7 @@ export default function SavedLocation() {
 
             </div>
 
-          </div>
+          </div> */}
 
           <Button
             onClick={handleSave}

@@ -41,7 +41,7 @@ export default function BasicDetailsCard({
           <textarea
             rows={5}
             {...register("description")}
-            placeholder="Friendly 5v5 football match for intermediate players."
+            placeholder="Describe your event briefly"
             className="w-full rounded-xl border border-zinc-200 bg-zinc-50 p-4 outline-none transition focus:border-green-600 focus:bg-white"
           />
 

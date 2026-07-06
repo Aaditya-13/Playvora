@@ -14,14 +14,18 @@ export default function useUpdateAvatar() {
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.BOOTSTRAP,
       });
-
-      toast.success("Avatar updated.");
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.PROFILE,
+      });
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.DASHBOARD,
+      });
     },
 
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to update avatar."
+        "Failed to update avatar."
       );
     },
   });
