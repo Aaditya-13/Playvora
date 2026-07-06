@@ -166,7 +166,7 @@ export const guestLoginService = async () => {
 
     const username = `guest_${random}`;
 
-    const email = `${username}@playnear.local`;
+    const email = `${username}@playvora.local`;
 
     const password = crypto
       .randomBytes(16)

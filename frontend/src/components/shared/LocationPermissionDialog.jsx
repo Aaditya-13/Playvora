@@ -34,7 +34,7 @@ export default function LocationPermissionDialog({
         </h2>
 
         <p className="mt-3 text-center text-sm leading-7 text-zinc-500">
-          PlayNear uses your location to
+          Playvora uses your location to
           discover nearby activities and
           improve search results.
         </p>

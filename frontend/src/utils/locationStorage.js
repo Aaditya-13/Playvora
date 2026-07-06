@@ -1,4 +1,4 @@
-const STORAGE_KEY = "playnear-location";
+const STORAGE_KEY = "playvora-location";
 
 export function getSavedLocation() {
   const value = localStorage.getItem(STORAGE_KEY);

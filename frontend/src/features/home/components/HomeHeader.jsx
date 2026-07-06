@@ -5,7 +5,7 @@ export default function HomeHeader({ user }) {
       <div>
 
         <h1 className="text-3xl font-black tracking-tight text-zinc-900">
-          PlayNear
+          Playvora
         </h1>
 
         <p className="mt-2 text-sm text-zinc-500">

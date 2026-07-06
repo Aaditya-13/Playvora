@@ -52,7 +52,7 @@ export default function Register() {
       </h1>
 
       <p className="mt-2 text-sm text-zinc-600">
-        Join PlayNear today.
+        Join Playvora today.
       </p>
 
       <form

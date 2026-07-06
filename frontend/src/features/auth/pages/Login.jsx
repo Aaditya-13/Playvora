@@ -61,7 +61,7 @@ const onSubmit = async (values) => {
       </h1>
 
       <p className="mt-2 text-sm text-zinc-600">
-        Sign in to continue to PlayNear.
+        Sign in to continue to Playvora.
       </p>
 
       <form

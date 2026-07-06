@@ -30,7 +30,7 @@ export default function Landing() {
         queryKey: QUERY_KEYS.BOOTSTRAP,
       });
 
-      toast.success("Welcome to PlayNear!");
+      toast.success("Welcome to Playvora!");
 
       navigate(ROUTES.HOME);
     } catch (error) {

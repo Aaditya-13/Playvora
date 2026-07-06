@@ -106,7 +106,7 @@ async (
 
             file.path,
 
-            "playnear/avatars"
+            "playvora/avatars"
 
         );
 
