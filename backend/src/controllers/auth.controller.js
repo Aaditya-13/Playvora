@@ -10,10 +10,12 @@ import {
     guestLoginService
 } from "../services/auth.service.js";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
 };
 
 export const registerUser = asyncHandler(async (req, res) => {
