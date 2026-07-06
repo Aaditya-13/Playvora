@@ -1,5 +1,4 @@
 import {
-  ArrowLeft,
   Calendar,
   Clock,
   MapPin,
@@ -8,7 +7,6 @@ import { format } from "date-fns";
 
 export default function ActivityHero({
   activity,
-  onBack,
 }) {
   const date = new Date(activity.scheduledAt);
 
@@ -79,14 +77,6 @@ export default function ActivityHero({
       <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 p-6 text-white">
 
         <div className="flex items-center justify-between">
-
-          <button
-            type="button"
-            onClick={onBack}
-            className="rounded-full bg-white/15 p-2 transition hover:bg-white/25"
-          >
-            <ArrowLeft size={22} />
-          </button>
 
           <span
             className={`rounded-full border px-3 py-1 text-xs font-bold uppercase backdrop-blur-sm ${STATUS_STYLES[activity.status]}`}

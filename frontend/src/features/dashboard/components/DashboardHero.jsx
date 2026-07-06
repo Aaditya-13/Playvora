@@ -16,10 +16,6 @@ export default function DashboardHero({
 
         <div className="min-w-0 flex-1">
 
-          <p className="text-sm font-medium text-emerald-100">
-            Welcome back 👋
-          </p>
-
           <h1 className="mt-1 truncate text-2xl font-bold">
             {user?.fullName}
           </h1>

@@ -77,7 +77,6 @@ export default function ActivityDetails() {
 
         <ActivityHero
           activity={activity}
-          onBack={() => navigate(-1)}
         />
 
         <ActivityStatsCard
