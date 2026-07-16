@@ -18,6 +18,8 @@ const QUERY_KEYS = {
   ATTENDANCE: ["attendance"],
 
   ACTIVITY_DETAILS: ["activity-details"],
+
+  EDIT_PROFILE: ["profile/edit"],
 };
 
 export default QUERY_KEYS;

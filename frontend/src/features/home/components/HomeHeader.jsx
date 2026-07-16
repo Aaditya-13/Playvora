@@ -10,12 +10,12 @@ export default function HomeHeader({ user, location, onUpdateLocation, isUpdatin
     if (location?.latitude && location?.longitude) {
       getAddressFromCoordinates(location.latitude, location.longitude)
         .then((addr) => {
-           if (addr) {
-             const parts = addr.split(',');
-             setAddress(parts.slice(0, 2).join(',') || "Current Location");
-           } else {
-             setAddress("Current Location");
-           }
+          if (addr) {
+            const parts = addr.split(',');
+            setAddress(parts.slice(0, 2).join(',') || "Current Location");
+          } else {
+            setAddress("Current Location");
+          }
         });
     } else {
       setAddress("Unknown Location");
@@ -62,13 +62,13 @@ export default function HomeHeader({ user, location, onUpdateLocation, isUpdatin
 
       <div className="text-right">
 
-        <p className="text-sm text-zinc-500">
+        <h2 className="text-sm text-zinc-500">
           Welcome back,
-        </p>
+        </h2>
 
-        <p className="font-bold text-zinc-900">
+        <h3 className="font-bold text-zinc-900">
           {user?.fullName?.split(" ")[0]}
-        </p>
+        </h3>
 
       </div>
 

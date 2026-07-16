@@ -18,6 +18,9 @@ export default function useUpdateAvatar() {
         queryKey: QUERY_KEYS.PROFILE,
       });
       queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.EDIT_PROFILE,
+      });
+      queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.DASHBOARD,
       });
     },
