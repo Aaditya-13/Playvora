@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { MapPin, ChevronDown, Crosshair } from "lucide-react";
-import { getAddressFromCoordinates } from "../../../../utils/mapUtils";
+import { getAddressFromCoordinates } from "../../../utils/mapUtils";
 
 export default function HomeHeader({ user, location, onUpdateLocation, isUpdatingLocation }) {
   const [address, setAddress] = useState("Loading...");
