@@ -19,7 +19,9 @@ export default function Home() {
     (state) => state.user
   );
 
-  const { getLocation } = useLocation();
+  const { getLocation, requestBrowserLocation } = useLocation();
+
+  const [isUpdatingLocation, setIsUpdatingLocation] = useState(false);
 
   const [selectedSport, setSelectedSport] =
     useState("");
@@ -36,7 +38,22 @@ export default function Home() {
     }
 
     loadLocation();
+
+    const handleLocationUpdate = () => loadLocation();
+    window.addEventListener("locationUpdated", handleLocationUpdate);
+    return () => window.removeEventListener("locationUpdated", handleLocationUpdate);
   }, [getLocation]);
+
+  const handleUpdateLocation = async () => {
+    setIsUpdatingLocation(true);
+    try {
+      await requestBrowserLocation();
+    } catch (error) {
+      console.error("Failed to update location:", error);
+    } finally {
+      setIsUpdatingLocation(false);
+    }
+  };
 
   const {
     data,
@@ -57,6 +74,9 @@ export default function Home() {
 
         <HomeHeader
           user={user}
+          location={location}
+          onUpdateLocation={handleUpdateLocation}
+          isUpdatingLocation={isUpdatingLocation}
         />
 
         <SearchEntryCard />

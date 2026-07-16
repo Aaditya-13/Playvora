@@ -39,20 +39,14 @@ export default function useLocation() {
   }, []);
 
   const getLocation = useCallback(async () => {
-    try {
-      // Always prefer fresh browser location.
-      return await requestBrowserLocation();
-    } catch {
-      const saved = getSavedLocation();
+    const saved = getSavedLocation();
 
-      if (saved) {
-        toast.info("Using your saved location.");
-        return saved;
-      }
-
-      return null;
+    if (saved) {
+      return saved;
     }
-  }, [requestBrowserLocation]);
+
+    return null;
+  }, []);
 
   const clearLocation = useCallback(() => {
     clearSavedLocation();

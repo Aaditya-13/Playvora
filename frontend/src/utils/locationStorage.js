@@ -28,8 +28,10 @@ export function saveLocation({
       source,
     })
   );
+  window.dispatchEvent(new Event("locationUpdated"));
 }
 
 export function clearSavedLocation() {
   localStorage.removeItem(STORAGE_KEY);
+  window.dispatchEvent(new Event("locationUpdated"));
 }
