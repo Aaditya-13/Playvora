@@ -9,10 +9,10 @@ export default function SportFilterRow({
 
       <button
         onClick={() => onSelectSport("")}
-        className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
+        className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition-all ${
           selectedSport === ""
-            ? "bg-green-600 text-white"
-            : "border border-zinc-300 bg-white hover:border-green-300"
+            ? "bg-[#1FAA59] text-white shadow-md shadow-[#1FAA59]/30"
+            : "border border-zinc-200 bg-white text-zinc-600 hover:border-[#1FAA59]/50 hover:bg-zinc-50"
         }`}
       >
         All
@@ -22,10 +22,10 @@ export default function SportFilterRow({
         <button
           key={sport.value}
           onClick={() => onSelectSport(sport.value)}
-          className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition ${
+          className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition-all ${
             selectedSport === sport.value
-              ? "bg-green-600 text-white"
-              : "border border-zinc-300 bg-white hover:border-green-300"
+              ? "bg-[#1FAA59] text-white shadow-md shadow-[#1FAA59]/30"
+              : "border border-zinc-200 bg-white text-zinc-600 hover:border-[#1FAA59]/50 hover:bg-zinc-50"
           }`}
         >
           {sport.emoji} {sport.label}

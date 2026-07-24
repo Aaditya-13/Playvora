@@ -17,25 +17,25 @@ export default function ActivityCard({
   const navigate = useNavigate();
 
   return (
-    <article className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-green-200 hover:shadow-md">
+    <article className="rounded-3xl border border-zinc-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#1FAA59]/30 hover:shadow-[0_16px_40px_rgb(31,170,89,0.12)]">
 
       <div className="flex items-start justify-between">
 
         <div>
 
-          <h3 className="text-lg font-bold text-zinc-900">
+          <h3 className="text-xl font-extrabold text-zinc-900">
             {activity.title}
           </h3>
 
           <div className="mt-3 flex flex-wrap gap-2">
 
-            <Badge>
+            <span className="inline-flex items-center rounded-full bg-[#1FAA59] px-3 py-1 text-xs font-bold text-white shadow-sm">
               {activity.sport}
-            </Badge>
+            </span>
 
-            <Badge variant="secondary">
+            <span className="inline-flex items-center rounded-full border border-[#1FAA59]/30 bg-[#1FAA59]/5 px-3 py-1 text-xs font-bold text-[#1FAA59]">
               {activity.skillLevel}
-            </Badge>
+            </span>
 
           </div>
 
@@ -44,13 +44,13 @@ export default function ActivityCard({
         <div className="text-right">
 
           {activity.cost.amount === 0 ? (
-            <p className="font-bold text-green-600">
+            <p className="text-xl font-extrabold text-[#1FAA59]">
               Free
             </p>
           ) : (
-            <div className="flex items-center justify-end gap-1 font-bold text-zinc-900">
+            <div className="flex items-center justify-end gap-0.5 text-xl font-extrabold text-[#1FAA59]">
 
-              <IndianRupee size={16} />
+              <IndianRupee size={20} strokeWidth={2.5} />
 
               {activity.cost.amount}
 
@@ -67,17 +67,17 @@ export default function ActivityCard({
 
       <div className="mt-5 space-y-3">
 
-        <div className="flex items-center gap-2 text-sm text-zinc-600">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-600">
 
-          <MapPin size={16} />
+          <MapPin size={18} className="text-[#1FAA59]" fill="currentColor" fillOpacity={0.2} />
 
-          <span>{activity.groundName}</span>
+          <span className="truncate">{activity.groundName}</span>
 
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-zinc-600">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-600">
 
-          <Calendar size={16} />
+          <Calendar size={18} className="text-[#1FAA59]" fill="currentColor" fillOpacity={0.2} />
 
           <span>
             {format(
@@ -88,14 +88,20 @@ export default function ActivityCard({
 
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-zinc-600">
-
-          <Users size={16} />
-
-          <span>
-            {activity.currentPlayers} / {activity.maxPlayers} Players
-          </span>
-
+        <div className="mt-4 flex flex-col gap-1.5">
+          <div className="flex items-center justify-between text-xs font-bold text-zinc-600">
+            <span className="flex items-center gap-1.5">
+              <Users size={16} className="text-[#1FAA59]" fill="currentColor" fillOpacity={0.2} />
+              Players
+            </span>
+            <span className="text-zinc-500">{activity.currentPlayers} / {activity.maxPlayers}</span>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${activity.currentPlayers / activity.maxPlayers < 0.3 ? 'bg-orange-500' : 'bg-[#1FAA59]'}`}
+              style={{ width: `${Math.min((activity.currentPlayers / activity.maxPlayers) * 100, 100)}%` }}
+            />
+          </div>
         </div>
 
       </div>
@@ -104,11 +110,11 @@ export default function ActivityCard({
         onClick={() =>
           navigate(`/activities/${activity._id}`)
         }
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border border-zinc-200 py-3 font-semibold transition hover:border-green-300 hover:bg-green-50"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl border border-zinc-100 py-3.5 font-bold text-zinc-700 transition hover:border-[#1FAA59]/30 hover:bg-[#1FAA59]/5 hover:text-[#1FAA59]"
       >
         View Details
 
-        <ChevronRight size={18} />
+        <ChevronRight size={18} strokeWidth={2.5} />
 
       </button>
 

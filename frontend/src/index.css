@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 html,
 body,
 #root {
@@ -7,7 +11,7 @@ body,
 }
 
 body {
-    @apply bg-white text-zinc-900;
+    @apply bg-zinc-50 text-zinc-900;
 }
 
 .leaflet-control-attribution {

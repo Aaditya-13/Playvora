@@ -69,16 +69,18 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-zinc-50 pb-24">
+      <div className="bg-gradient-to-br from-[#1FAA59] to-[#0d5c2e] px-4 pt-10 pb-16">
+        <div className="mx-auto max-w-5xl">
+          <HomeHeader
+            user={user}
+            location={location}
+            onUpdateLocation={handleUpdateLocation}
+            isUpdatingLocation={isUpdatingLocation}
+          />
+        </div>
+      </div>
 
-      <section className="mx-auto max-w-5xl px-4 py-6">
-
-        <HomeHeader
-          user={user}
-          location={location}
-          onUpdateLocation={handleUpdateLocation}
-          isUpdatingLocation={isUpdatingLocation}
-        />
-
+      <section className="mx-auto max-w-5xl px-4 -mt-8">
         <SearchEntryCard />
 
         <SportFilterRow

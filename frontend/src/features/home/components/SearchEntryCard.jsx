@@ -8,11 +8,11 @@ export default function SearchEntryCard() {
   return (
     <button
       onClick={() => navigate("/search")}
-      className="group flex w-full items-center justify-between rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm transition-all hover:border-green-300 hover:bg-green-50/30"
+      className="group flex w-full items-center justify-between rounded-3xl border border-zinc-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all hover:border-[#1FAA59]/30 hover:shadow-[0_8px_30px_rgb(31,170,89,0.12)]"
     >
       <div className="flex items-center gap-4">
 
-        <div className="rounded-2xl bg-green-50 p-3 text-green-600">
+        <div className="rounded-2xl bg-[#1FAA59]/10 p-3 text-[#1FAA59]">
           <Search size={22} />
         </div>
 

@@ -23,22 +23,22 @@ export default function HomeHeader({ user, location, onUpdateLocation, isUpdatin
   }, [location]);
 
   return (
-    <header className="mb-6 flex items-start justify-between">
+    <header className="mb-2 flex items-start justify-between">
 
       <div className="relative">
 
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center gap-1 text-zinc-900 hover:text-orange-500 transition-colors"
+          className="flex items-center gap-1 text-white hover:text-green-100 transition-colors"
         >
-          <MapPin className="h-6 w-6 text-orange-500" />
-          <h1 className="text-2xl font-black tracking-tight truncate max-w-[180px] sm:max-w-[300px]">
+          <MapPin fill="white" className="h-6 w-6 text-[#1FAA59]" />
+          <h1 className="text-2xl font-extrabold tracking-tight truncate max-w-[180px] sm:max-w-[300px]">
             {address}
           </h1>
-          <ChevronDown className="h-5 w-5 text-zinc-500" />
+          <ChevronDown className="h-5 w-5 text-green-200" />
         </button>
 
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm font-medium text-green-100">
           Find your next game nearby.
         </p>
 
@@ -62,11 +62,11 @@ export default function HomeHeader({ user, location, onUpdateLocation, isUpdatin
 
       <div className="text-right">
 
-        <h2 className="text-sm text-zinc-500">
+        <h2 className="text-sm font-medium text-green-100">
           Welcome back,
         </h2>
 
-        <h3 className="font-bold text-zinc-900">
+        <h3 className="text-lg font-bold text-white">
           {user?.fullName?.split(" ")[0]}
         </h3>
 
