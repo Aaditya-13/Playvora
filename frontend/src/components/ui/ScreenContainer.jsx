@@ -7,7 +7,7 @@ export default function ScreenContainer({
   return (
     <section
       className={cn(
-        "mx-auto flex min-h-full w-full max-w-screen-sm flex-col px-4 py-6",
+        "mx-auto flex min-h-full w-full flex-col px-4 py-6",
         className
       )}
     >
