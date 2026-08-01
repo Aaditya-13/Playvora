@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from "react-router";
+import { useState } from "react";
+import { Share2 } from "lucide-react";
 
 import ScreenContainer from "../../../components/ui/ScreenContainer";
 import PageHeader from "../../../components/ui/PageHeader";
@@ -19,11 +21,12 @@ import OrganizerCard from "../components/activityDetailsComponents/OrganizerCard
 import ParticipantsCard from "../components/activityDetailsComponents/ParticipantsCard";
 import NotesCard from "../components/activityDetailsComponents/NotesCard";
 import BottomActionBar from "../components/activityDetailsComponents/BottomActionBar";
+import ShareActivityModal from "../components/ShareActivityModal";
 
 export default function ActivityDetails() {
   const { id } = useParams();
-
   const navigate = useNavigate();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const {
     data,
@@ -71,6 +74,14 @@ export default function ActivityDetails() {
         leftNode={
           <BackButton />
         }
+        rightNode={
+          <button 
+            onClick={() => setIsShareModalOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-zinc-600 shadow-sm ring-1 ring-zinc-200 transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none"
+          >
+            <Share2 className="h-5 w-5" />
+          </button>
+        }
       />
 
       <div className="mx-auto mt-6 flex max-w-5xl flex-col gap-6">
@@ -112,6 +123,13 @@ export default function ActivityDetails() {
         />
 
       </div>
+
+      <ShareActivityModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        activityTitle={activity.title}
+        activityId={activity._id}
+      />
 
     </ScreenContainer>
   );
