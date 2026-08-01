@@ -7,7 +7,7 @@ export const options = DEFAULT_OPTIONS;
 export default function () {
 
     const response = http.get(
-        `${BASE_URL}/activities/nearby`
+        `${BASE_URL}/activities/nearby?lat=20.0059&lng=73.7799`
     );
 
     check(response, {
