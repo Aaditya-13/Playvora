@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Stack, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments, useRootNavigationState } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "../store/authStore";
@@ -13,10 +13,11 @@ export default function RootLayout() {
   const { user, isBootstrapping, setUser, setBootstrapping } = useAuthStore();
   const segments = useSegments();
   const router = useRouter();
+  const rootNavigationState = useRootNavigationState();
 
   useEffect(() => {
     const bootstrapAuth = async () => {
-      setBootstrapping(true);
+      // isBootstrapping is initially true
       try {
         const { data } = await api.get('/auth/me');
         setUser(data.data);
@@ -31,20 +32,16 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (isBootstrapping) return;
+    if (!rootNavigationState?.key) return; // Wait for navigation to be ready
 
     const inAuthGroup = segments[0] === "(auth)";
 
-    // Prevent routing before layout is mounted by ensuring segments exist
-    if (!segments.length) return;
-
     if (!user && !inAuthGroup) {
-      // If the user is not logged in and they are not in the auth group, redirect them to login.
       router.replace("/(auth)/landing");
     } else if (user && inAuthGroup) {
-      // If the user is logged in and they try to access the auth group, redirect them to the main app.
       router.replace("/(tabs)");
     }
-  }, [user, segments, isBootstrapping]);
+  }, [user, segments, isBootstrapping, rootNavigationState]);
 
   if (isBootstrapping) {
     return (

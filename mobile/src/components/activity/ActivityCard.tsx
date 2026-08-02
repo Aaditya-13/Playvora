@@ -26,10 +26,12 @@ export function ActivityCard({ activity, onPress }: ActivityCardProps) {
 
   const handlePressIn = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // eslint-disable-next-line react-hooks/immutability
     scale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
   };
 
   const handlePressOut = () => {
+    // eslint-disable-next-line react-hooks/immutability
     scale.value = withSpring(1, { damping: 15, stiffness: 200 });
   };
 

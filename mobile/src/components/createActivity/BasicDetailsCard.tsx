@@ -5,7 +5,7 @@ import { Controller } from 'react-hook-form';
 export const BasicDetailsCard = ({ control, errors }: any) => (
   <View className="mb-6 bg-white p-5 rounded-3xl border border-zinc-200 shadow-sm">
     <Text className="text-lg font-bold mb-1">Game Details</Text>
-    <Text className="text-sm text-zinc-500 mb-4">Tell players what you're organizing.</Text>
+    <Text className="text-sm text-zinc-500 mb-4">Tell players what you&apos;re organizing.</Text>
 
     <Controller
       control={control}

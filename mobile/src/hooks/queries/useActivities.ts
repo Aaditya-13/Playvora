@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/client';
 import { Activity } from '../../types/activity';
 
@@ -17,6 +17,20 @@ export const useActivities = () => {
       const lng = 73.7910;
       const { data } = await api.get<NearbyResponse>(`/activities/nearby?lat=${lat}&lng=${lng}&radius=50000`);
       return data.data.activities;
+    }
+  });
+};
+
+export const useCreateActivity = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const { data } = await api.post('/activities', payload);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activities'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     }
   });
 };

@@ -1,17 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Settings, MapPin, Trophy, Activity, Star } from 'lucide-react-native';
-import { Image } from 'expo-image';
+import { Settings, MapPin, Trophy, Activity as ActivityIcon, Star, LogOut, Info } from 'lucide-react-native';
 import { useProfile } from '../../hooks/queries/useProfile';
 import { useLogout } from '../../hooks/queries/useAuth';
 import { useAuthStore } from '../../store/authStore';
+import { ActivityCard } from '../../components/activity/ActivityCard';
+import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { data, isLoading, isError, refetch } = useProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const clearUser = useAuthStore(s => s.clearUser);
+  const [activeTab, setActiveTab] = useState<'joined' | 'organized'>('joined');
 
   if (isLoading) {
     return (
@@ -33,74 +36,132 @@ export default function ProfileScreen() {
   }
 
   const profile = data.data;
+  const avatarUri = profile.user.avatar || "https://i.pravatar.cc/300";
+  const reliability = profile.stats.reliabilityScore ? profile.stats.reliabilityScore.toFixed(1) : "5.0";
+  
+  const joinedActivities = profile.upcomingJoined || [];
+  const organizedActivities = profile.upcomingCreated || [];
+  const activeActivities = activeTab === 'joined' ? joinedActivities : organizedActivities;
 
   return (
-    <ScrollView className="flex-1 bg-zinc-50" contentContainerStyle={{ paddingBottom: 120 }}>
-      {/* Cover Photo & Header */}
-      <View className="bg-emerald-500 h-44 px-5 flex-row justify-between items-start" style={{ paddingTop: insets.top + 10 }}>
+    <View className="flex-1 bg-zinc-50">
+      {/* Header */}
+      <View className="bg-emerald-500 px-5 flex-row justify-between items-center pb-12" style={{ paddingTop: insets.top + 10 }}>
         <Text className="text-white text-3xl font-black">Profile</Text>
-        <TouchableOpacity className="w-10 h-10 items-center justify-center rounded-full bg-white/20">
-          <Settings size={20} color="white" />
-        </TouchableOpacity>
+        <View className="flex-row gap-2">
+          <TouchableOpacity 
+            className="w-10 h-10 items-center justify-center rounded-full bg-white/20"
+          >
+            <Settings size={20} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              logout();
+              clearUser();
+            }}
+            disabled={isLoggingOut}
+            className="w-10 h-10 items-center justify-center rounded-full bg-red-500/80"
+          >
+            {isLoggingOut ? <ActivityIndicator size="small" color="white" /> : <LogOut size={18} color="white" />}
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Profile Info */}
-      <View className="px-5 relative -mt-12 mb-8">
-        <View className="w-28 h-28 rounded-full border-4 border-zinc-50 bg-white overflow-hidden shadow-sm mb-4">
-          <Image 
-            source={{ uri: profile.user.avatar || "https://i.pravatar.cc/300" }}
-            style={{ flex: 1 }}
-          />
-        </View>
-        <Text className="text-2xl font-extrabold text-zinc-900">{profile.user.fullName || profile.user.username}</Text>
-        
-        <View className="flex-row items-center mt-1 mb-4">
-          <MapPin size={16} color="#71717a" />
-          <Text className="text-zinc-500 font-medium ml-1.5">No location set</Text>
-        </View>
-
-        <Text className="text-zinc-700 leading-relaxed text-base">Weekend warrior. Always down for football or tennis. Catch me on the court!</Text>
-      </View>
-
-      {/* Stats */}
-      <View className="px-5 mb-8 flex-row justify-between">
-        <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 mr-2 items-center">
-          <View className="w-12 h-12 bg-blue-50 rounded-full items-center justify-center mb-3">
-            <Activity size={24} color="#3b82f6" />
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+        {/* Profile Info */}
+        <View className="px-5 relative -mt-10 mb-6 items-center">
+          <View className="w-28 h-28 rounded-full border-4 border-zinc-50 bg-white overflow-hidden shadow-sm mb-3">
+            <Image 
+              source={{ uri: avatarUri }}
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="cover"
+            />
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.activitiesJoined}</Text>
-          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Games Joined</Text>
-        </View>
-
-        <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 mx-2 items-center">
-          <View className="w-12 h-12 bg-emerald-50 rounded-full items-center justify-center mb-3">
-            <Trophy size={24} color="#10b981" />
+          <Text className="text-2xl font-extrabold text-zinc-900 text-center">
+            {profile.user.fullName || profile.user.username || "Guest User"}
+          </Text>
+          
+          <View className="flex-row items-center mt-1.5 mb-4 bg-zinc-100 px-3 py-1 rounded-full">
+            <MapPin size={14} color="#71717a" />
+            <Text className="text-zinc-600 font-medium ml-1.5 text-xs">Mumbai, India</Text>
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.activitiesCreated}</Text>
-          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Organized</Text>
         </View>
 
-        <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 ml-2 items-center">
-          <View className="w-12 h-12 bg-orange-50 rounded-full items-center justify-center mb-3">
-            <Star size={24} color="#f97316" />
+        {/* Stats */}
+        <View className="px-5 mb-8 flex-row justify-between gap-3">
+          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
+            <View className="w-10 h-10 bg-blue-50 rounded-full items-center justify-center mb-2">
+              <ActivityIcon size={20} color="#3b82f6" />
+            </View>
+            <Text className="text-xl font-black text-zinc-900">{profile.stats.activitiesJoined}</Text>
+            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Joined</Text>
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.reliabilityScore?.toFixed(1) || "5.0"}</Text>
-          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Reliability</Text>
-        </View>
-      </View>
 
-      <View className="px-5 mt-4">
-        <TouchableOpacity 
-          onPress={() => {
-            logout();
-            clearUser();
-          }}
-          disabled={isLoggingOut}
-          className="bg-red-50 py-4 rounded-2xl items-center border border-red-100 shadow-sm"
-        >
-          {isLoggingOut ? <ActivityIndicator color="#dc2626" /> : <Text className="text-red-600 font-bold text-base">Sign Out</Text>}
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
+            <View className="w-10 h-10 bg-emerald-50 rounded-full items-center justify-center mb-2">
+              <Trophy size={20} color="#10b981" />
+            </View>
+            <Text className="text-xl font-black text-zinc-900">{profile.stats.activitiesCreated}</Text>
+            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Organized</Text>
+          </View>
+
+          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
+            <View className="w-10 h-10 bg-orange-50 rounded-full items-center justify-center mb-2">
+              <Star size={20} color="#f97316" />
+            </View>
+            <Text className="text-xl font-black text-zinc-900">{reliability}</Text>
+            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Reliability</Text>
+          </View>
+        </View>
+
+        {/* Segmented Control */}
+        <View className="px-5 mb-6">
+          <View className="flex-row bg-zinc-200/60 p-1 rounded-2xl">
+            <TouchableOpacity 
+              onPress={() => setActiveTab('joined')}
+              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'joined' ? 'bg-white shadow-sm' : ''}`}
+            >
+              <Text className={`font-bold ${activeTab === 'joined' ? 'text-zinc-900' : 'text-zinc-500'}`}>
+                Upcoming Games ({joinedActivities.length})
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={() => setActiveTab('organized')}
+              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'organized' ? 'bg-white shadow-sm' : ''}`}
+            >
+              <Text className={`font-bold ${activeTab === 'organized' ? 'text-zinc-900' : 'text-zinc-500'}`}>
+                Organized ({organizedActivities.length})
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Activities List */}
+        <View className="px-1">
+          {activeActivities.length === 0 ? (
+            <View className="items-center justify-center py-10 px-5 mx-4 border-2 border-dashed border-zinc-200 rounded-3xl">
+              <Info size={32} color="#a1a1aa" className="mb-3" />
+              <Text className="text-zinc-600 font-bold text-center text-lg mb-1">
+                No {activeTab === 'joined' ? 'upcoming' : 'organized'} games
+              </Text>
+              <Text className="text-zinc-400 text-center text-sm">
+                {activeTab === 'joined' 
+                  ? "You haven't joined any upcoming games yet. Head to the feed to find one!" 
+                  : "You haven't organized any upcoming games yet. Hit Create to host one!"}
+              </Text>
+            </View>
+          ) : (
+            activeActivities.map(activity => (
+              <ActivityCard 
+                key={activity._id} 
+                activity={activity} 
+                onPress={() => router.push(`/activity/${activity._id}`)} 
+              />
+            ))
+          )}
+        </View>
+
+      </ScrollView>
+    </View>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,6 +13,9 @@ import { ScheduleCard } from '../../components/createActivity/ScheduleCard';
 import { PricingCard } from '../../components/createActivity/PricingCard';
 import { NotesCard } from '../../components/createActivity/NotesCard';
 
+import { useCreateActivity } from '../../hooks/queries/useActivities';
+import { useRouter } from 'expo-router';
+
 const createActivitySchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().optional(),
@@ -21,8 +24,8 @@ const createActivitySchema = z.object({
   address: z.string().min(3, "Address is required"),
   dateInput: z.string().min(1, "Date is required"),
   timeInput: z.string().min(1, "Time is required"),
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
   maxPlayers: z.number().min(2, "Must have at least 2 players"),
   skillLevel: z.string().min(1, "Please select a skill level"),
   venueType: z.string().min(1, "Please select a venue type"),
@@ -34,15 +37,17 @@ const createActivitySchema = z.object({
     description: z.string().optional(),
   }),
   notes: z.string().optional(),
-  visibilityRadius: z.number().min(1000),
+  visibilityRadius: z.number().min(1000).max(50000),
 });
 
 type CreateActivityForm = z.infer<typeof createActivitySchema>;
 
 export default function CreateScreen() {
   const insets = useSafeAreaInsets();
-  
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm<CreateActivityForm>({
+  const router = useRouter();
+  const { mutate: createActivity, isPending } = useCreateActivity();
+
+  const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm<CreateActivityForm>({
     resolver: zodResolver(createActivitySchema),
     defaultValues: {
       title: '',
@@ -72,27 +77,37 @@ export default function CreateScreen() {
   const onSubmit = (data: CreateActivityForm) => {
     // Combine date and time to scheduledAt
     const scheduledAt = new Date(`${data.dateInput}T${data.timeInput}`);
-    
+
     if (Number.isNaN(scheduledAt.getTime())) {
       Alert.alert("Error", "Invalid date or time format (use YYYY-MM-DD and HH:MM)");
       return;
     }
 
+    const { dateInput, timeInput, ...restData } = data;
+
     const payload = {
-      ...data,
+      ...restData,
       scheduledAt: scheduledAt.toISOString(),
     };
 
-    console.log("Activity Payload:", JSON.stringify(payload, null, 2));
-    Alert.alert("Success", "Activity created successfully! (Mock)");
+    createActivity(payload, {
+      onSuccess: (res) => {
+        Alert.alert("Success", "Activity created successfully!");
+        reset();
+        router.push(`/activity/${res.data._id}`);
+      },
+      onError: (err: any) => {
+        Alert.alert("Error", err?.response?.data?.message || "Failed to create activity");
+      }
+    });
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={{ flex: 1 }} 
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView 
+      <ScrollView
         className="flex-1 bg-zinc-50"
         contentContainerStyle={{ paddingTop: insets.top + 20, paddingBottom: 120, paddingHorizontal: 16 }}
       >
@@ -109,15 +124,20 @@ export default function CreateScreen() {
       </ScrollView>
 
       {/* Sticky Footer */}
-      <View 
+      <View
         className="absolute bottom-0 left-0 right-0 bg-white border-t border-zinc-100"
         style={{ paddingBottom: Math.max(insets.bottom, 20), paddingTop: 16, paddingHorizontal: 16 }}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
-          className="bg-emerald-500 py-4 rounded-2xl items-center shadow-sm"
+          disabled={isPending}
+          className={`py-4 rounded-2xl items-center shadow-sm ${isPending ? 'bg-emerald-400' : 'bg-emerald-500'}`}
         >
-          <Text className="text-white font-bold text-lg">Publish Activity</Text>
+          {isPending ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white font-bold text-lg">Publish Activity</Text>
+          )}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

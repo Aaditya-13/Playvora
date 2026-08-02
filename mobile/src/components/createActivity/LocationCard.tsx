@@ -1,12 +1,17 @@
-import React from 'react';
-import { View, Text, TextInput, Platform } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, TextInput, Platform, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Controller, useWatch } from 'react-hook-form';
 import { WebView } from 'react-native-webview';
+import { Search } from 'lucide-react-native';
+import { getCoordinatesFromAddress } from '../../utils/mapUtils';
 
-export const LocationCard = ({ control, setValue, errors }: any) => {
+export const LocationCard = ({ control, setValue, errors, setIsMapActive }: any) => {
+  const webViewRef = useRef<WebView>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const latitude = useWatch({ control, name: 'latitude' }) || 19.0760;
   const longitude = useWatch({ control, name: 'longitude' }) || 72.8777;
   const visibilityRadius = useWatch({ control, name: 'visibilityRadius' }) || 5000;
+  const address = useWatch({ control, name: 'address' });
 
   const handleMessage = (event: any) => {
     try {
@@ -14,9 +19,38 @@ export const LocationCard = ({ control, setValue, errors }: any) => {
       if (data.type === 'LOCATION_SELECTED') {
         setValue('latitude', data.lat, { shouldValidate: true });
         setValue('longitude', data.lng, { shouldValidate: true });
+      } else if (data.type === 'MAP_INTERACTION_START') {
+        if (setIsMapActive) setIsMapActive(true);
+      } else if (data.type === 'MAP_INTERACTION_END') {
+        if (setIsMapActive) setIsMapActive(false);
       }
     } catch (e) {
       console.log('Error parsing WebView message', e);
+    }
+  };
+
+  const searchLocation = async () => {
+    if (!address || !address.trim()) return;
+    setIsSearching(true);
+    try {
+      const coords = await getCoordinatesFromAddress(address);
+      if (coords) {
+        setValue('latitude', coords.latitude, { shouldValidate: true });
+        setValue('longitude', coords.longitude, { shouldValidate: true });
+        
+        webViewRef.current?.injectJavaScript(`
+          if (typeof updateMapFromOutside === 'function') {
+            updateMapFromOutside(${coords.latitude}, ${coords.longitude});
+          }
+          true;
+        `);
+      } else {
+        Alert.alert('Not Found', 'Could not find the specified location.');
+      }
+    } catch (e) {
+      Alert.alert('Error', 'Failed to search location.');
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -35,7 +69,7 @@ export const LocationCard = ({ control, setValue, errors }: any) => {
     <body>
       <div id="map"></div>
       <script>
-        const map = L.map('map', { zoomControl: false }).setView([${latitude}, ${longitude}], 12);
+        const map = L.map('map', { zoomControl: true }).setView([${latitude}, ${longitude}], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap'
@@ -66,6 +100,20 @@ export const LocationCard = ({ control, setValue, errors }: any) => {
           circle.setLatLng(e.latlng);
           map.setView(e.latlng);
           updateLocation(e.latlng.lat, e.latlng.lng);
+        });
+
+        window.updateMapFromOutside = function(lat, lng) {
+          const pos = [lat, lng];
+          marker.setLatLng(pos);
+          circle.setLatLng(pos);
+          map.setView(pos, 14);
+        };
+
+        map.on('dragstart', function() {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_INTERACTION_START' }));
+        });
+        map.on('dragend', function() {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_INTERACTION_END' }));
         });
       </script>
     </body>
@@ -101,13 +149,23 @@ export const LocationCard = ({ control, setValue, errors }: any) => {
         render={({ field: { onChange, value } }) => (
           <View className="mb-5">
             <Text className="text-sm font-semibold mb-2">Search Location / Address</Text>
-            <TextInput
-              placeholder="e.g. Bandra West, Mumbai"
-              value={value}
-              onChangeText={onChange}
-              className="bg-zinc-50 px-4 py-3 rounded-xl border border-zinc-200 text-base"
-              placeholderTextColor="#9ca3af"
-            />
+            <View className="flex-row gap-2">
+              <TextInput
+                placeholder="e.g. Bandra West, Mumbai"
+                value={value}
+                onChangeText={onChange}
+                className="flex-1 bg-zinc-50 px-4 py-3 rounded-xl border border-zinc-200 text-base"
+                placeholderTextColor="#9ca3af"
+                onSubmitEditing={searchLocation}
+              />
+              <TouchableOpacity
+                onPress={searchLocation}
+                disabled={isSearching}
+                className="w-12 h-12 bg-emerald-500 rounded-xl items-center justify-center shadow-sm"
+              >
+                {isSearching ? <ActivityIndicator color="white" /> : <Search size={20} color="white" />}
+              </TouchableOpacity>
+            </View>
             {errors.address && <Text className="text-red-500 text-xs mt-1 ml-1">{errors.address.message}</Text>}
           </View>
         )}
@@ -120,6 +178,7 @@ export const LocationCard = ({ control, setValue, errors }: any) => {
           </View>
         ) : (
           <WebView
+            ref={webViewRef}
             source={{ html: htmlContent }}
             style={{ flex: 1 }}
             scrollEnabled={false}

@@ -41,7 +41,7 @@ export default function ActivityDetailsScreen() {
     return (
       <View className="flex-1 bg-zinc-50 items-center justify-center p-6">
         <Text className="text-2xl font-black text-zinc-900 mb-2">Oops!</Text>
-        <Text className="text-zinc-500 text-center mb-8 leading-relaxed">We couldn't load this activity. It may have been deleted or the network failed.</Text>
+        <Text className="text-zinc-500 text-center mb-8 leading-relaxed">We couldn&apos;t load this activity. It may have been deleted or the network failed.</Text>
         <TouchableOpacity 
           onPress={() => refetch()}
           className="bg-zinc-900 px-8 py-3.5 rounded-2xl w-full items-center mb-3"
