@@ -1,12 +1,21 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import React from 'react';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { Link } from "expo-router";
 import { useAuthStore } from "../../store/authStore";
+import { useGuestLogin } from "../../hooks/queries/useAuth";
 
 export default function Landing() {
   const setUser = useAuthStore((state) => state.setUser);
+  const { mutateAsync: guestLogin, isPending } = useGuestLogin();
 
-  const handleDevLogin = () => {
-    setUser({ id: "dev-123", name: "Dev User", email: "dev@playvora.com" });
+  const handleGuestLogin = async () => {
+    try {
+      const response = await guestLogin();
+      setUser(response.data.user);
+    } catch (error: any) {
+      console.log(error);
+      Alert.alert("Login Failed", "Could not connect to the backend.");
+    }
   };
 
   return (
@@ -25,8 +34,16 @@ export default function Landing() {
         </TouchableOpacity>
       </Link>
 
-      <TouchableOpacity onPress={handleDevLogin} className="w-full bg-emerald-600/20 p-4 rounded-xl border border-emerald-500/50">
-        <Text className="text-emerald-400 text-center font-bold text-lg">DEV: Instant Login Bypass</Text>
+      <TouchableOpacity 
+        onPress={handleGuestLogin} 
+        disabled={isPending}
+        className="w-full bg-emerald-600/20 p-4 rounded-xl border border-emerald-500/50 flex-row justify-center items-center h-16"
+      >
+        {isPending ? (
+          <ActivityIndicator color="#34d399" />
+        ) : (
+          <Text className="text-emerald-400 text-center font-bold text-lg">Continue as Guest</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
