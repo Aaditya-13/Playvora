@@ -4,9 +4,11 @@ import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityCard } from '../../components/activity/ActivityCard';
 import { mockActivities, Activity } from '../../data/mockActivities';
+import { useRouter } from 'expo-router';
 
 export default function Feed() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <View className="flex-1 bg-zinc-50" style={{ paddingTop: insets.top }}>
@@ -16,7 +18,12 @@ export default function Feed() {
       </View>
       <FlashList
         data={mockActivities}
-        renderItem={({ item }) => <ActivityCard activity={item as Activity} />}
+        renderItem={({ item }) => (
+          <ActivityCard 
+            activity={item as Activity} 
+            onPress={() => router.push(`/activity/${(item as Activity)._id}` as any)} 
+          />
+        )}
         // @ts-expect-error React 19 type incompatibility with FlashList
         estimatedItemSize={250}
         contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
