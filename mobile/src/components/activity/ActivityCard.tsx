@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { Activity } from "../../data/mockActivities";
+import { Activity } from "../../types/activity";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

@@ -4,11 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Settings, MapPin, Trophy, Activity, Star } from 'lucide-react-native';
 import { Image } from 'expo-image';
 import { useProfile } from '../../hooks/queries/useProfile';
+import { useLogout } from '../../hooks/queries/useAuth';
 import { useAuthStore } from '../../store/authStore';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const { data, isLoading, isError, refetch } = useProfile();
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const clearUser = useAuthStore(s => s.clearUser);
 
   if (isLoading) {
@@ -46,18 +48,18 @@ export default function ProfileScreen() {
       <View className="px-5 relative -mt-12 mb-8">
         <View className="w-28 h-28 rounded-full border-4 border-zinc-50 bg-white overflow-hidden shadow-sm mb-4">
           <Image 
-            source={{ uri: profile.avatarUrl }}
+            source={{ uri: profile.user.avatar || "https://i.pravatar.cc/300" }}
             style={{ flex: 1 }}
           />
         </View>
-        <Text className="text-2xl font-extrabold text-zinc-900">{profile.name}</Text>
+        <Text className="text-2xl font-extrabold text-zinc-900">{profile.user.fullName || profile.user.username}</Text>
         
         <View className="flex-row items-center mt-1 mb-4">
           <MapPin size={16} color="#71717a" />
-          <Text className="text-zinc-500 font-medium ml-1.5">{profile.location}</Text>
+          <Text className="text-zinc-500 font-medium ml-1.5">No location set</Text>
         </View>
 
-        <Text className="text-zinc-700 leading-relaxed text-base">{profile.bio}</Text>
+        <Text className="text-zinc-700 leading-relaxed text-base">Weekend warrior. Always down for football or tennis. Catch me on the court!</Text>
       </View>
 
       {/* Stats */}
@@ -66,15 +68,15 @@ export default function ProfileScreen() {
           <View className="w-12 h-12 bg-blue-50 rounded-full items-center justify-center mb-3">
             <Activity size={24} color="#3b82f6" />
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.gamesPlayed}</Text>
-          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Games Played</Text>
+          <Text className="text-2xl font-black text-zinc-900">{profile.stats.activitiesJoined}</Text>
+          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Games Joined</Text>
         </View>
 
         <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 mx-2 items-center">
           <View className="w-12 h-12 bg-emerald-50 rounded-full items-center justify-center mb-3">
             <Trophy size={24} color="#10b981" />
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.organized}</Text>
+          <Text className="text-2xl font-black text-zinc-900">{profile.stats.activitiesCreated}</Text>
           <Text className="text-xs text-zinc-500 font-bold mt-0.5">Organized</Text>
         </View>
 
@@ -82,17 +84,21 @@ export default function ProfileScreen() {
           <View className="w-12 h-12 bg-orange-50 rounded-full items-center justify-center mb-3">
             <Star size={24} color="#f97316" />
           </View>
-          <Text className="text-2xl font-black text-zinc-900">{profile.stats.rating}</Text>
-          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Avg Rating</Text>
+          <Text className="text-2xl font-black text-zinc-900">{profile.stats.reliabilityScore?.toFixed(1) || "5.0"}</Text>
+          <Text className="text-xs text-zinc-500 font-bold mt-0.5">Reliability</Text>
         </View>
       </View>
 
       <View className="px-5 mt-4">
         <TouchableOpacity 
-          onPress={() => clearUser()}
+          onPress={() => {
+            logout();
+            clearUser();
+          }}
+          disabled={isLoggingOut}
           className="bg-red-50 py-4 rounded-2xl items-center border border-red-100 shadow-sm"
         >
-          <Text className="text-red-600 font-bold text-base">Sign Out</Text>
+          {isLoggingOut ? <ActivityIndicator color="#dc2626" /> : <Text className="text-red-600 font-bold text-base">Sign Out</Text>}
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { WebView } from 'react-native-webview';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { mockActivities, Activity } from '../../data/mockActivities';
+import { useActivities } from '../../hooks/queries/useActivities';
+import { Activity } from '../../types/activity';
 import { ActivityCard } from '../../components/activity/ActivityCard';
 import { useFilterStore } from '../../store/filterStore';
 import { Filter } from 'lucide-react-native';
@@ -18,8 +19,9 @@ export default function MapScreen() {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
   const { selectedSport, setSelectedSport } = useFilterStore();
+  const { data: activities } = useActivities();
 
-  const filteredActivities = mockActivities.filter(
+  const filteredActivities = (activities || []).filter(
     (a) => selectedSport === 'All' || a.sport === selectedSport
   );
 
@@ -125,7 +127,7 @@ export default function MapScreen() {
     try {
       const data = JSON.parse(event.nativeEvent.data);
       if (data.type === 'MARKER_CLICK') {
-        const activity = mockActivities.find(a => a._id === data.id);
+        const activity = (activities || []).find(a => a._id === data.id);
         if (activity) {
           setSelectedActivity(activity);
           bottomSheetRef.current?.expand();

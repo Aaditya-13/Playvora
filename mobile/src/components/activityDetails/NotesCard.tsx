@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Activity } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
 import { Info } from 'lucide-react-native';
 
 export const NotesCard = ({ activity }: { activity: Activity }) => (

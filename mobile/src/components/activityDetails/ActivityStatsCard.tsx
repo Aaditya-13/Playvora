@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Activity } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
 import { Calendar, Clock, MapPin, IndianRupee } from 'lucide-react-native';
 import { format } from 'date-fns';
 

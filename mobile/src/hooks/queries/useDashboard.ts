@@ -1,24 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../api/client';
-import { mockActivities } from '../../data/mockActivities';
+import { Activity, User } from '../../types/activity';
+
+export interface DashboardData {
+  user: User;
+  stats: {
+    activitiesCreated: number;
+    activitiesJoined: number;
+    reliabilityScore: number;
+  };
+  pendingRequests: number;
+  upcomingCreated: Activity[];
+  upcomingJoined: Activity[];
+}
+
+interface DashboardResponse {
+  data: DashboardData;
+}
 
 export const useDashboard = () => {
   return useQuery({
     queryKey: ['dashboard'],
     queryFn: async () => {
-      try {
-        const { data } = await api.get('/user/dashboard');
-        return data;
-      } catch (error) {
-        console.warn("Backend fetch failed for dashboard, falling back to mock data.");
-        // Simulate upcoming vs past for UI testing phase
-        return {
-          data: {
-            upcoming: [mockActivities[0], mockActivities[1]],
-            past: [mockActivities[2], mockActivities[3]]
-          }
-        };
-      }
+      const { data } = await api.get<DashboardResponse>('/dashboard');
+      return data;
     }
   });
 };

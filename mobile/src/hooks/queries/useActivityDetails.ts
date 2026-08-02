@@ -1,26 +1,32 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/client';
-import { mockActivities } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
+
+interface ActivityResponse {
+  data: Activity;
+}
 
 export const useActivityDetails = (id: string) => {
   return useQuery({
     queryKey: ['activity', id],
     queryFn: async () => {
-      try {
-        // Attempt to fetch from real backend
-        const { data } = await api.get(`/activities/${id}`);
-        return data;
-      } catch (error) {
-        console.warn(`Backend fetch failed for activity ${id}, falling back to mock data.`);
-        // Fallback for UI building phase
-        const mockData = mockActivities.find(a => a._id === id);
-        if (mockData) {
-          // Wrap in 'data' to match standard axios response shape if that's what frontend uses
-          return { data: mockData }; 
-        }
-        throw new Error("Activity not found");
-      }
+      const { data } = await api.get<ActivityResponse>(`/activities/${id}`);
+      return data;
     },
-    enabled: !!id,
+    enabled: !!id
+  });
+};
+
+export const useJoinActivity = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await api.post(`/activities/${id}/join`);
+      return data;
+    },
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ['activity', id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    }
   });
 };

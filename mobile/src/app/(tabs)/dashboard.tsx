@@ -5,14 +5,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
 import { ActivityCard } from '../../components/activity/ActivityCard';
-import { Activity } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
 import { useDashboard } from '../../hooks/queries/useDashboard';
 
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { data, isLoading, isError, refetch } = useDashboard();
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [activeTab, setActiveTab] = useState<'organizing' | 'joined'>('organizing');
 
   if (isLoading) {
     return (
@@ -33,7 +33,7 @@ export default function DashboardScreen() {
     );
   }
 
-  const activities = activeTab === 'upcoming' ? data.data.upcoming : data.data.past;
+  const activities = activeTab === 'organizing' ? data.data.upcomingCreated : data.data.upcomingJoined;
 
   return (
     <View className="flex-1 bg-zinc-50" style={{ paddingTop: insets.top }}>
@@ -45,16 +45,16 @@ export default function DashboardScreen() {
       {/* Tabs */}
       <View className="flex-row px-4 mb-4">
         <TouchableOpacity 
-          onPress={() => setActiveTab('upcoming')}
-          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'upcoming' ? 'border-emerald-500' : 'border-zinc-200'}`}
+          onPress={() => setActiveTab('organizing')}
+          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'organizing' ? 'border-emerald-500' : 'border-zinc-200'}`}
         >
-          <Text className={`font-bold ${activeTab === 'upcoming' ? 'text-emerald-500' : 'text-zinc-500'}`}>Upcoming</Text>
+          <Text className={`font-bold ${activeTab === 'organizing' ? 'text-emerald-500' : 'text-zinc-500'}`}>Organizing</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          onPress={() => setActiveTab('past')}
-          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'past' ? 'border-emerald-500' : 'border-zinc-200'}`}
+          onPress={() => setActiveTab('joined')}
+          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'joined' ? 'border-emerald-500' : 'border-zinc-200'}`}
         >
-          <Text className={`font-bold ${activeTab === 'past' ? 'text-emerald-500' : 'text-zinc-500'}`}>Past</Text>
+          <Text className={`font-bold ${activeTab === 'joined' ? 'text-emerald-500' : 'text-zinc-500'}`}>Joined</Text>
         </TouchableOpacity>
       </View>
 

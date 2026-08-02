@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Platform, TouchableOpacity, Linking } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Map, Navigation } from 'lucide-react-native';
-import { Activity } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
 
 export const ActivityMapCard = ({ activity }: { activity: Activity }) => {
   const [lng, lat] = activity.location.coordinates;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Activity } from '../../data/mockActivities';
+import { Activity } from '../../types/activity';
 import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
 
