@@ -9,8 +9,9 @@ import { ActivityCard } from '../../components/activity/ActivityCard';
 import { useFilterStore } from '../../store/filterStore';
 import { Filter } from 'lucide-react-native';
 
-const SPORTS = ['All', 'Football', 'Basketball', 'Tennis', 'Badminton'];
+import { SPORTS as CONSTANT_SPORTS } from '../../components/createActivity/constants';
 
+const FILTER_SPORTS = [{ value: 'All', label: 'All', emoji: '🔍' }, ...CONSTANT_SPORTS];
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const webViewRef = useRef<WebView>(null);
@@ -57,7 +58,7 @@ export default function MapScreen() {
     <body>
       <div id="map"></div>
       <script>
-        const map = L.map('map', { zoomControl: false }).setView([19.0760, 72.8777], 13);
+        const map = L.map('map', { zoomControl: false }).setView([20.0076, 73.7601], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
           attribution: '© OpenStreetMap'
@@ -69,7 +70,7 @@ export default function MapScreen() {
           iconSize: [20, 20],
           iconAnchor: [10, 10]
         });
-        L.marker([19.0760, 72.8777], { icon: userIcon, interactive: false }).addTo(map);
+        L.marker([20.0076, 73.7601], { icon: userIcon, interactive: false }).addTo(map);
 
         const markers = [];
 
@@ -77,14 +78,9 @@ export default function MapScreen() {
           markers.forEach(m => map.removeLayer(m));
           markers.length = 0;
 
-          const getIcon = (sport) => {
-            switch(sport) {
-              case 'Football': return '⚽';
-              case 'Basketball': return '🏀';
-              case 'Tennis': return '🎾';
-              case 'Badminton': return '🏸';
-              default: return '📍';
-            }
+          const getIcon = (sportValue) => {
+            const sportObj = ${JSON.stringify(CONSTANT_SPORTS)}.find(s => s.value === sportValue);
+            return sportObj ? sportObj.emoji : '📍';
           };
 
           activities.forEach(act => {
@@ -154,12 +150,12 @@ export default function MapScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16, gap: 10 }}
         >
-          {SPORTS.map(sport => {
-            const isSelected = sport === selectedSport;
+          {FILTER_SPORTS.map(sport => {
+            const isSelected = sport.value === selectedSport;
             return (
               <TouchableOpacity
-                key={sport}
-                onPress={() => setSelectedSport(sport)}
+                key={sport.value}
+                onPress={() => setSelectedSport(sport.value)}
                 className={`px-4 py-2 rounded-full flex-row items-center border ${
                   isSelected ? 'bg-emerald-500 border-emerald-500' : 'bg-white/95 border-zinc-200'
                 }`}
@@ -171,9 +167,8 @@ export default function MapScreen() {
                   elevation: 4,
                 }}
               >
-                {sport === 'All' && <Filter size={14} color={isSelected ? 'white' : '#3f3f46'} style={{ marginRight: 6 }} />}
                 <Text className={`font-bold ${isSelected ? 'text-white' : 'text-zinc-700'}`}>
-                  {sport}
+                  {sport.emoji} {sport.label}
                 </Text>
               </TouchableOpacity>
             )

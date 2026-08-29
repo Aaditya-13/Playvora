@@ -142,6 +142,8 @@ export const LocationCard = ({ control, setValue, errors, setIsMapActive }: any)
           </View>
         )}
       />
+      <Controller control={control} name="latitude" render={() => <View />} />
+      <Controller control={control} name="longitude" render={() => <View />} />
 
       <Controller
         control={control}

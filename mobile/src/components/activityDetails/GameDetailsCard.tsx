@@ -28,7 +28,9 @@ export const GameDetailsCard = ({ activity }: { activity: Activity }) => (
         <Shield size={20} color="#52525b" />
         <Text className="text-zinc-600 ml-3 font-medium">Join Policy</Text>
       </View>
-      <Text className="font-bold text-zinc-900">Instant Join</Text>
+      <Text className="font-bold text-zinc-900 capitalize">
+        {activity.joinPolicy === 'open' ? 'Instant Join' : activity.joinPolicy}
+      </Text>
     </View>
   </View>
 );

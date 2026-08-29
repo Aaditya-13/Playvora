@@ -43,6 +43,7 @@ export const GameSettingsCard = ({ control, errors, setValue }: any) => {
             </TouchableOpacity>
           </View>
         </View>
+        <Controller control={control} name="maxPlayers" render={() => <View />} />
         {errors.maxPlayers && <Text className="mt-2 text-sm text-red-500">{errors.maxPlayers.message}</Text>}
       </View>
 

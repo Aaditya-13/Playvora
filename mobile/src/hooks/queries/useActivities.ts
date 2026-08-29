@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/client';
 import { Activity } from '../../types/activity';
+import { useFilterStore } from '../../store/filterStore';
 
 interface NearbyResponse {
   data: {
@@ -9,13 +10,21 @@ interface NearbyResponse {
 }
 
 export const useActivities = () => {
+  const { selectedSport, page } = useFilterStore();
+
   return useQuery({
-    queryKey: ['activities', 'nearby'],
+    queryKey: ['activities', 'nearby', selectedSport, page],
     queryFn: async () => {
-      // Using fallback coordinates (Nashik, India) as discussed
-      const lat = 20.0059;
-      const lng = 73.7910;
-      const { data } = await api.get<NearbyResponse>(`/activities/nearby?lat=${lat}&lng=${lng}&radius=50000`);
+      // Default to near College Road, Nashik if not provided
+      const lat = 20.0076;
+      const lng = 73.7601;
+      
+      let url = `/activities/nearby?lat=${lat}&lng=${lng}&radius=50000&page=${page}`;
+      if (selectedSport && selectedSport !== 'All') {
+        url += `&sport=${selectedSport}`;
+      }
+      
+      const { data } = await api.get<NearbyResponse>(url);
       return data.data.activities;
     }
   });

@@ -3,7 +3,12 @@ export const getCoordinatesFromAddress = async (address: string) => {
 
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`,
+      {
+        headers: {
+          'User-Agent': 'PlayvoraMobileApp/1.0',
+        }
+      }
     );
     const data = await response.json();
     
@@ -23,7 +28,12 @@ export const getCoordinatesFromAddress = async (address: string) => {
 export const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+      {
+        headers: {
+          'User-Agent': 'PlayvoraMobileApp/1.0',
+        }
+      }
     );
 
     const data = await response.json();

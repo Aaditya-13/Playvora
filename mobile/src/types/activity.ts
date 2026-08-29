@@ -23,10 +23,10 @@ export interface Activity {
   scheduledAt: string;
   maxPlayers: number;
   currentPlayers: number;
-  skillLevel: 'beginner' | 'intermediate' | 'advanced' | 'pro';
-  venueType: 'indoor' | 'outdoor' | 'any';
-  joinPolicy: 'instant' | 'approval';
-  genderPreference: 'any' | 'men_only' | 'women_only';
+  skillLevel: 'beginner' | 'intermediate' | 'advanced';
+  venueType: 'indoor' | 'outdoor' | 'both';
+  joinPolicy: 'open' | 'approval';
+  genderPreference: 'any' | 'male' | 'female';
   cost: {
     amount: number;
     currency: string;

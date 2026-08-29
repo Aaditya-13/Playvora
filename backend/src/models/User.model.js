@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 import { BCRYPT_SALT_ROUNDS } from "../constants/auth.constants.js";
+import { SPORTS } from "../constants/activity.constants.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -63,6 +64,7 @@ const userSchema = new mongoose.Schema(
     favouriteSports: [
       {
         type: String,
+        enum: SPORTS,
       },
     ],
 
