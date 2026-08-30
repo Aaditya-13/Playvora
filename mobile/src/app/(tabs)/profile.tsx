@@ -54,13 +54,13 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1 bg-zinc-50">
       {/* Header */}
-      <View className="bg-emerald-500 px-5 flex-row justify-between items-center pb-12" style={{ paddingTop: insets.top + 10 }}>
-        <Text className="text-white text-3xl font-black">Profile</Text>
+      <View className="bg-zinc-50 px-4 flex-row justify-between items-center pb-4" style={{ paddingTop: insets.top + 16 }}>
+        <Text className="text-zinc-900 text-3xl font-black">Profile</Text>
         <View className="flex-row gap-2">
           <TouchableOpacity 
-            className="w-10 h-10 items-center justify-center rounded-full bg-white/20"
+            className="w-10 h-10 items-center justify-center rounded-full bg-white border border-zinc-200"
           >
-            <Settings size={20} color="white" />
+            <Settings size={20} color="#3f3f46" />
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => {
@@ -68,75 +68,76 @@ export default function ProfileScreen() {
               clearUser();
             }}
             disabled={isLoggingOut}
-            className="w-10 h-10 items-center justify-center rounded-full bg-red-500/80"
+            className="w-10 h-10 items-center justify-center rounded-full bg-red-50 border border-red-100"
           >
-            {isLoggingOut ? <ActivityIndicator size="small" color="white" /> : <LogOut size={18} color="white" />}
+            {isLoggingOut ? <ActivityIndicator size="small" color="#ef4444" /> : <LogOut size={18} color="#ef4444" />}
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
         {/* Profile Info */}
-        <View className="px-5 relative -mt-10 mb-6 items-center">
-          <View className="w-28 h-28 rounded-full border-4 border-zinc-50 bg-white overflow-hidden shadow-sm mb-3">
-            <Image 
-              source={{ uri: avatarUri }}
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="cover"
-            />
+        <View className="px-5 mb-8 mt-2 items-center">
+          <View className="w-28 h-28 rounded-full border-2 border-emerald-500 bg-white overflow-hidden mb-4 p-1">
+            <View className="w-full h-full rounded-full overflow-hidden bg-zinc-100">
+              <Image 
+                source={{ uri: avatarUri }}
+                style={{ width: '100%', height: '100%' }}
+                resizeMode="cover"
+              />
+            </View>
           </View>
-          <Text className="text-2xl font-extrabold text-zinc-900 text-center">
+          <Text className="text-2xl font-extrabold text-zinc-900 text-center mb-1">
             {profile.user.fullName || profile.user.username || "Guest User"}
           </Text>
           
-          <View className="flex-row items-center mt-1.5 mb-4 bg-zinc-100 px-3 py-1 rounded-full">
-            <MapPin size={14} color="#71717a" />
+          <View className="flex-row items-center bg-zinc-100 px-3 py-1.5 rounded-full">
+            <MapPin size={12} color="#71717a" />
             <Text className="text-zinc-600 font-medium ml-1.5 text-xs">Mumbai, India</Text>
           </View>
         </View>
 
-        {/* Stats */}
-        <View className="px-5 mb-8 flex-row justify-between gap-3">
-          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
-            <View className="w-10 h-10 bg-blue-50 rounded-full items-center justify-center mb-2">
-              <ActivityIcon size={20} color="#3b82f6" />
+        {/* Consolidated Stats */}
+        <View className="px-4 mb-8">
+          <View className="bg-white rounded-3xl border border-zinc-200 flex-row overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }}>
+            
+            <View className="flex-1 py-4 items-center justify-center border-r border-zinc-100">
+              <Text className="text-2xl font-black text-zinc-900 mb-0.5">{profile.stats.activitiesJoined}</Text>
+              <Text className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">Joined</Text>
             </View>
-            <Text className="text-xl font-black text-zinc-900">{profile.stats.activitiesJoined}</Text>
-            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Joined</Text>
-          </View>
 
-          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
-            <View className="w-10 h-10 bg-emerald-50 rounded-full items-center justify-center mb-2">
-              <Trophy size={20} color="#10b981" />
+            <View className="flex-1 py-4 items-center justify-center border-r border-zinc-100">
+              <Text className="text-2xl font-black text-zinc-900 mb-0.5">{profile.stats.activitiesCreated}</Text>
+              <Text className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">Organized</Text>
             </View>
-            <Text className="text-xl font-black text-zinc-900">{profile.stats.activitiesCreated}</Text>
-            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Organized</Text>
-          </View>
 
-          <View className="bg-white p-4 rounded-3xl border border-zinc-200 shadow-sm flex-1 items-center">
-            <View className="w-10 h-10 bg-orange-50 rounded-full items-center justify-center mb-2">
-              <Star size={20} color="#f97316" />
+            <View className="flex-1 py-4 items-center justify-center">
+              <View className="flex-row items-center gap-1 mb-0.5">
+                <Text className="text-2xl font-black text-zinc-900">{reliability}</Text>
+                <Star size={14} color="#f59e0b" fill="#f59e0b" />
+              </View>
+              <Text className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">Reliability</Text>
             </View>
-            <Text className="text-xl font-black text-zinc-900">{reliability}</Text>
-            <Text className="text-[10px] text-zinc-500 font-bold mt-1 uppercase">Reliability</Text>
+
           </View>
         </View>
 
         {/* Segmented Control */}
-        <View className="px-5 mb-6">
-          <View className="flex-row bg-zinc-200/60 p-1 rounded-2xl">
+        <View className="px-4 mb-6">
+          <View className="flex-row bg-zinc-200/80 p-1.5 rounded-full">
             <TouchableOpacity 
               onPress={() => setActiveTab('joined')}
-              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'joined' ? 'bg-white' : ''}`}
+              className={`flex-1 py-2.5 items-center rounded-full ${activeTab === 'joined' ? 'bg-white' : ''}`}
               style={activeTab === 'joined' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
               <Text className={`font-bold ${activeTab === 'joined' ? 'text-zinc-900' : 'text-zinc-500'}`}>
-                Upcoming Games ({joinedActivities.length})
+                Upcoming ({joinedActivities.length})
               </Text>
             </TouchableOpacity>
+            
             <TouchableOpacity 
               onPress={() => setActiveTab('organized')}
-              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'organized' ? 'bg-white' : ''}`}
+              className={`flex-1 py-2.5 items-center rounded-full ${activeTab === 'organized' ? 'bg-white' : ''}`}
               style={activeTab === 'organized' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
               <Text className={`font-bold ${activeTab === 'organized' ? 'text-zinc-900' : 'text-zinc-500'}`}>
@@ -147,17 +148,19 @@ export default function ProfileScreen() {
         </View>
 
         {/* Activities List */}
-        <View className="px-1">
+        <View className="px-0">
           {activeActivities.length === 0 ? (
-            <View className="items-center justify-center py-10 px-5 mx-4 border-2 border-dashed border-zinc-200 rounded-3xl">
-              <Info size={32} color="#a1a1aa" className="mb-3" />
-              <Text className="text-zinc-600 font-bold text-center text-lg mb-1">
+            <View className="items-center justify-center py-12 px-6 mx-4 border border-dashed border-zinc-300 rounded-3xl bg-zinc-100/50">
+              <View className="w-16 h-16 bg-zinc-200 rounded-full items-center justify-center mb-4">
+                <ActivityIcon size={32} color="#a1a1aa" />
+              </View>
+              <Text className="text-zinc-800 font-extrabold text-center text-lg mb-1.5">
                 No {activeTab === 'joined' ? 'upcoming' : 'organized'} games
               </Text>
-              <Text className="text-zinc-400 text-center text-sm">
+              <Text className="text-zinc-500 text-center text-sm font-medium leading-5">
                 {activeTab === 'joined' 
-                  ? "You haven't joined any upcoming games yet. Head to the feed to find one!" 
-                  : "You haven't organized any upcoming games yet. Hit Create to host one!"}
+                  ? "You haven't joined any games yet. Head to the Discover feed to find your next match!" 
+                  : "You haven't organized any games. Tap Create to host your own match and invite players."}
               </Text>
             </View>
           ) : (
@@ -165,7 +168,7 @@ export default function ProfileScreen() {
               <ActivityCard 
                 key={activity._id} 
                 activity={activity} 
-                onPress={() => router.push(`/activity/${activity._id}`)} 
+                onPress={() => router.push(`/activity/${activity._id}` as any)} 
               />
             ))
           )}
