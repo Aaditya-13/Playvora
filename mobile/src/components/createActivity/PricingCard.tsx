@@ -16,7 +16,7 @@ export const PricingCard = ({ control, errors }: any) => (
             <Text className="text-sm font-semibold mb-2">Amount (₹)</Text>
             <TextInput
               placeholder="0"
-              value={value === 0 ? '' : value.toString()}
+              value={value === 0 || value === undefined || value === null ? '' : value.toString()}
               onChangeText={(text) => onChange(Number(text.replace(/[^0-9]/g, '')))}
               keyboardType="number-pad"
               className="bg-zinc-50 px-4 py-3 rounded-xl border border-zinc-200 text-base"

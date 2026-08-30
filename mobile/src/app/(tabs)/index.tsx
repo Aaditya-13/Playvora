@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, Pressable, ScrollView, TouchableOpacity } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityCard } from '../../components/activity/ActivityCard';
@@ -29,14 +29,19 @@ export default function Feed() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 12, paddingTop: 4, gap: 8 }}
         >
           {['All', 'football', 'basketball', 'tennis', 'cricket', 'badminton', 'volleyball'].map((sport) => (
-            <TouchableOpacity
+            <Pressable
               key={sport}
               onPress={() => setSelectedSport(sport)}
               className={`px-5 py-2.5 rounded-full border ${
                 selectedSport === sport 
                   ? 'bg-zinc-900 border-zinc-900' 
-                  : 'bg-white border-zinc-200 shadow-sm'
+                  : 'bg-white border-zinc-200'
               }`}
+              style={
+                selectedSport !== sport
+                  ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }
+                  : undefined
+              }
             >
               <Text 
                 className={`font-bold capitalize ${
@@ -45,7 +50,7 @@ export default function Feed() {
               >
                 {sport}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </ScrollView>
       </View>

@@ -5,7 +5,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "../store/authStore";
 import api from "../api/client";
 import { View, ActivityIndicator } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
 import "../global.css";
+
+// Prevent the splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
@@ -43,13 +47,11 @@ export default function RootLayout() {
     }
   }, [user, segments, isBootstrapping, rootNavigationState]);
 
-  if (isBootstrapping) {
-    return (
-      <View style={{ flex: 1, backgroundColor: '#000', alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color="#10b981" />
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (!isBootstrapping) {
+      SplashScreen.hideAsync();
+    }
+  }, [isBootstrapping]);
 
   return (
     <QueryClientProvider client={queryClient}>

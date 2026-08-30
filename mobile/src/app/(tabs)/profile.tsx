@@ -36,7 +36,15 @@ export default function ProfileScreen() {
   }
 
   const profile = data.data;
-  const avatarUri = profile.user.avatar || "https://i.pravatar.cc/300";
+  
+  // Guard against "null" or "undefined" strings that crash React Native's RCTImageView
+  const isValidAvatar = profile.user?.avatar && 
+    typeof profile.user.avatar === 'string' && 
+    profile.user.avatar !== 'null' && 
+    profile.user.avatar !== 'undefined' &&
+    profile.user.avatar.trim() !== '';
+    
+  const avatarUri = isValidAvatar ? profile.user.avatar : "https://i.pravatar.cc/300";
   const reliability = profile.stats.reliabilityScore ? profile.stats.reliabilityScore.toFixed(1) : "5.0";
   
   const joinedActivities = profile.upcomingJoined || [];
@@ -119,7 +127,8 @@ export default function ProfileScreen() {
           <View className="flex-row bg-zinc-200/60 p-1 rounded-2xl">
             <TouchableOpacity 
               onPress={() => setActiveTab('joined')}
-              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'joined' ? 'bg-white shadow-sm' : ''}`}
+              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'joined' ? 'bg-white' : ''}`}
+              style={activeTab === 'joined' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
               <Text className={`font-bold ${activeTab === 'joined' ? 'text-zinc-900' : 'text-zinc-500'}`}>
                 Upcoming Games ({joinedActivities.length})
@@ -127,7 +136,8 @@ export default function ProfileScreen() {
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setActiveTab('organized')}
-              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'organized' ? 'bg-white shadow-sm' : ''}`}
+              className={`flex-1 py-3 items-center rounded-xl ${activeTab === 'organized' ? 'bg-white' : ''}`}
+              style={activeTab === 'organized' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
               <Text className={`font-bold ${activeTab === 'organized' ? 'text-zinc-900' : 'text-zinc-500'}`}>
                 Organized ({organizedActivities.length})

@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { WebView } from 'react-native-webview';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -153,24 +153,22 @@ export default function MapScreen() {
           {FILTER_SPORTS.map(sport => {
             const isSelected = sport.value === selectedSport;
             return (
-              <TouchableOpacity
+              <Pressable
                 key={sport.value}
                 onPress={() => setSelectedSport(sport.value)}
                 className={`px-4 py-2 rounded-full flex-row items-center border ${
-                  isSelected ? 'bg-emerald-500 border-emerald-500' : 'bg-white/95 border-zinc-200'
+                  isSelected ? 'bg-zinc-900 border-zinc-900' : 'bg-white border-zinc-200'
                 }`}
-                style={{
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 6,
-                  elevation: 4,
-                }}
+                style={
+                  !isSelected
+                    ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }
+                    : { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 6, elevation: 4 }
+                }
               >
                 <Text className={`font-bold ${isSelected ? 'text-white' : 'text-zinc-700'}`}>
                   {sport.emoji} {sport.label}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             )
           })}
         </ScrollView>

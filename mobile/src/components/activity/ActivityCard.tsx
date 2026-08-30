@@ -21,18 +21,16 @@ export function ActivityCard({ activity, onPress }: ActivityCardProps) {
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: scale.get() }],
   }));
 
   const handlePressIn = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    // eslint-disable-next-line react-hooks/immutability
-    scale.value = withSpring(0.97, { damping: 15, stiffness: 200 });
+    scale.set(withSpring(0.97, { damping: 15, stiffness: 200 }));
   };
 
   const handlePressOut = () => {
-    // eslint-disable-next-line react-hooks/immutability
-    scale.value = withSpring(1, { damping: 15, stiffness: 200 });
+    scale.set(withSpring(1, { damping: 15, stiffness: 200 }));
   };
 
   const isAlmostFull = activity.currentPlayers / activity.maxPlayers >= 0.8;
