@@ -1,8 +1,9 @@
-import React from 'react';
-import { View, Text, ActivityIndicator, Pressable, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, ActivityIndicator, Pressable, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityCard } from '../../components/activity/ActivityCard';
+import { ActivityCardSkeleton } from '../../components/activity/ActivityCardSkeleton';
 import { Activity } from '../../types/activity';
 import { useActivities } from '../../hooks/queries/useActivities';
 import { useRouter } from 'expo-router';
@@ -12,8 +13,17 @@ export default function Feed() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { page, setPage, selectedSport, setSelectedSport } = useFilterStore();
-  const { data: activities, isLoading, isError, isFetching } = useActivities();
+  const { data: activities, isLoading, isError, isFetching, refetch } = useActivities();
   const hasMore = (activities || []).length === 10;
+  
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setPage(1);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch, setPage]);
 
   return (
     <View className="flex-1 bg-zinc-50" style={{ paddingTop: insets.top }}>
@@ -55,13 +65,18 @@ export default function Feed() {
         </ScrollView>
       </View>
       
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#10b981" />
+      {isLoading && !activities ? (
+        <View className="flex-1 px-1">
+          <ActivityCardSkeleton />
+          <ActivityCardSkeleton />
+          <ActivityCardSkeleton />
         </View>
       ) : isError ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-zinc-500">Failed to load activities.</Text>
+          <Text className="text-zinc-500 font-medium">Failed to load activities.</Text>
+          <TouchableOpacity onPress={() => refetch()} className="mt-4 bg-emerald-500 px-6 py-3 rounded-full">
+            <Text className="text-white font-bold">Retry</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <FlashList
@@ -75,6 +90,7 @@ export default function Feed() {
           // @ts-expect-error React 19 type incompatibility with FlashList
           estimatedItemSize={250}
           contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10b981" />}
           ListEmptyComponent={
             <View className="items-center justify-center pt-20">
               <Text className="text-zinc-500 text-lg font-medium">No games found nearby.</Text>

@@ -1,21 +1,51 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Bell, Calendar, Zap, CheckCircle2 } from 'lucide-react-native';
 
 import { ActivityCard } from '../../components/activity/ActivityCard';
+import { ActivityCardSkeleton } from '../../components/activity/ActivityCardSkeleton';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { useDashboard } from '../../hooks/queries/useDashboard';
 
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { data, isLoading, isError, refetch } = useDashboard();
+  const { data, isLoading, isError, refetch, isRefetching } = useDashboard();
+  const [refreshing, setRefreshing] = useState(false);
 
-  if (isLoading) {
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
+  if (isLoading && !data) {
     return (
-      <View className="flex-1 bg-zinc-50 items-center justify-center">
-        <ActivityIndicator size="large" color="#10b981" />
+      <View className="flex-1 bg-zinc-50">
+        <View className="bg-zinc-50 px-5 pb-4" style={{ paddingTop: insets.top + 16 }}>
+          <Text className="text-zinc-900 text-3xl font-black mb-1">Action Center</Text>
+          <Text className="text-zinc-500 text-sm font-medium">Your hub for immediate attention</Text>
+        </View>
+        <View className="flex-1 px-1 mt-2">
+          <View className="px-4 mb-6">
+            <View className="bg-zinc-100 p-5 rounded-3xl h-24 justify-center">
+              <View className="flex-row items-center gap-4">
+                <Skeleton width={48} height={48} borderRadius={24} />
+                <View>
+                  <Skeleton width={150} height={20} className="mb-2" />
+                  <Skeleton width={220} height={14} />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View className="px-4 mb-4">
+            <Skeleton width={140} height={24} />
+          </View>
+          <ActivityCardSkeleton />
+          <ActivityCardSkeleton />
+        </View>
       </View>
     );
   }
@@ -23,7 +53,7 @@ export default function DashboardScreen() {
   if (isError || !data?.data) {
     return (
       <View className="flex-1 bg-zinc-50 items-center justify-center p-6">
-        <Text className="text-xl font-bold mb-4">Error loading dashboard</Text>
+        <Text className="text-xl font-bold mb-4 text-zinc-800">Error loading dashboard</Text>
         <TouchableOpacity onPress={() => refetch()} className="bg-emerald-500 px-6 py-3 rounded-full">
           <Text className="text-white font-bold">Retry</Text>
         </TouchableOpacity>
@@ -47,7 +77,14 @@ export default function DashboardScreen() {
         <Text className="text-zinc-500 text-sm font-medium">Your hub for immediate attention</Text>
       </View>
 
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        className="flex-1" 
+        contentContainerStyle={{ paddingBottom: 100 }} 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10b981" />
+        }
+      >
         
         <View className="px-5 mt-2 mb-6">
           {actionableRequests > 0 ? (

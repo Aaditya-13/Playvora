@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Image } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Image, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Settings, MapPin, Trophy, Activity as ActivityIcon, Star, LogOut, Info } from 'lucide-react-native';
 import { useProfile } from '../../hooks/queries/useProfile';
 import { useLogout } from '../../hooks/queries/useAuth';
 import { useAuthStore } from '../../store/authStore';
 import { ActivityCard } from '../../components/activity/ActivityCard';
+import { ActivityCardSkeleton } from '../../components/activity/ActivityCardSkeleton';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -15,11 +17,34 @@ export default function ProfileScreen() {
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const clearUser = useAuthStore(s => s.clearUser);
   const [activeTab, setActiveTab] = useState<'joined' | 'organized' | 'history'>('joined');
+  const [refreshing, setRefreshing] = useState(false);
 
-  if (isLoading) {
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
+  if (isLoading && !data) {
     return (
-      <View className="flex-1 bg-zinc-50 items-center justify-center">
-        <ActivityIndicator size="large" color="#10b981" />
+      <View className="flex-1 bg-zinc-50">
+        <View className="bg-zinc-50 px-4 flex-row justify-between items-center pb-4" style={{ paddingTop: insets.top + 16 }}>
+          <Text className="text-zinc-900 text-3xl font-black">Profile</Text>
+        </View>
+        <View className="flex-1 px-1">
+          <View className="px-5 mb-8 mt-6 items-center">
+            <Skeleton width={112} height={112} borderRadius={56} className="mb-4" />
+            <Skeleton width={160} height={28} className="mb-3" />
+            <Skeleton width={100} height={24} borderRadius={12} />
+          </View>
+          <View className="px-4 mb-8">
+            <Skeleton height={80} borderRadius={24} />
+          </View>
+          <View className="px-4 mb-6">
+            <Skeleton height={40} borderRadius={20} />
+          </View>
+          <ActivityCardSkeleton />
+        </View>
       </View>
     );
   }
@@ -83,7 +108,14 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        className="flex-1" 
+        contentContainerStyle={{ paddingBottom: 120 }} 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10b981" />
+        }
+      >
         {/* Profile Info */}
         <View className="px-5 mb-8 mt-2 items-center">
           <View className="w-28 h-28 rounded-full border-2 border-emerald-500 bg-white overflow-hidden mb-4 p-1">
