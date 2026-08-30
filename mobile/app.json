@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/playvora-logo.png",
         "monochromeImage": "./assets/images/playvora-logo.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.scorchingsun.playvora"
     },
     "web": {
       "output": "static",
@@ -42,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2b4fd408-571f-4c49-b06e-4e9fe55f179e"
+      }
+    },
+    "owner": "scorchingsun"
   }
 }
