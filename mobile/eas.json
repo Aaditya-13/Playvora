@@ -7,7 +7,10 @@
     },
     "preview": {
       "distribution": "internal",
-      "android": { "buildType": "apk" }
+      "android": { "buildType": "apk" },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://10.178.2.126:3000/api/v1"
+      }
     },
     "production": {}
   }
