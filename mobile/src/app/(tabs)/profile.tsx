@@ -65,6 +65,7 @@ export default function ProfileScreen() {
         <Text className="text-zinc-900 text-3xl font-black">Profile</Text>
         <View className="flex-row gap-2">
           <TouchableOpacity 
+            onPress={() => router.push('/settings')}
             className="w-10 h-10 items-center justify-center rounded-full bg-white border border-zinc-200"
           >
             <Settings size={20} color="#3f3f46" />
