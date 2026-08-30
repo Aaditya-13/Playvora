@@ -20,6 +20,12 @@ export const getDashboardService = async (
         upcomingCreated,
 
         upcomingJoined,
+        
+        pastCreated,
+        
+        pastJoined,
+        
+        actionableRequests,
 
     ] = await Promise.all([
 
@@ -79,6 +85,37 @@ export const getDashboardService = async (
             scheduledAt: 1,
         })
         .limit(5),
+        
+        Activity.find({
+            organizer: userId,
+            scheduledAt: { $lt: new Date() },
+            isDeleted: false,
+        })
+        .sort({ scheduledAt: -1 })
+        .limit(10),
+
+        Activity.find({
+            participants: userId,
+            scheduledAt: { $lt: new Date() },
+            isDeleted: false,
+        })
+        .sort({ scheduledAt: -1 })
+        .limit(10),
+        
+        Activity.aggregate([
+            { $match: { organizer: userId, isDeleted: false, scheduledAt: { $gte: new Date() } } },
+            {
+                $lookup: {
+                    from: "joinrequests",
+                    localField: "_id",
+                    foreignField: "activity",
+                    as: "requests"
+                }
+            },
+            { $unwind: "$requests" },
+            { $match: { "requests.status": "pending" } },
+            { $count: "count" }
+        ]).then(res => res[0]?.count || 0)
 
     ]);
 
@@ -104,6 +141,12 @@ export const getDashboardService = async (
         upcomingCreated,
 
         upcomingJoined,
+        
+        pastCreated,
+        
+        pastJoined,
+        
+        actionableRequests,
 
     };
 

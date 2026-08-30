@@ -12,6 +12,9 @@ export interface DashboardData {
   pendingRequests: number;
   upcomingCreated: Activity[];
   upcomingJoined: Activity[];
+  pastCreated: Activity[];
+  pastJoined: Activity[];
+  actionableRequests: number;
 }
 
 interface DashboardResponse {

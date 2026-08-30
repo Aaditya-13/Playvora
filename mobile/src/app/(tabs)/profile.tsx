@@ -14,7 +14,7 @@ export default function ProfileScreen() {
   const { data, isLoading, isError, refetch } = useProfile();
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const clearUser = useAuthStore(s => s.clearUser);
-  const [activeTab, setActiveTab] = useState<'joined' | 'organized'>('joined');
+  const [activeTab, setActiveTab] = useState<'joined' | 'organized' | 'history'>('joined');
 
   if (isLoading) {
     return (
@@ -49,7 +49,14 @@ export default function ProfileScreen() {
   
   const joinedActivities = profile.upcomingJoined || [];
   const organizedActivities = profile.upcomingCreated || [];
-  const activeActivities = activeTab === 'joined' ? joinedActivities : organizedActivities;
+  const pastActivities = [...(data.data.pastJoined || []), ...(data.data.pastCreated || [])]
+    .filter((v, i, a) => a.findIndex(t => t._id === v._id) === i)
+    .sort((a, b) => new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime());
+
+  const activeActivities = 
+    activeTab === 'joined' ? joinedActivities : 
+    activeTab === 'organized' ? organizedActivities : 
+    pastActivities;
 
   return (
     <View className="flex-1 bg-zinc-50">
@@ -130,8 +137,8 @@ export default function ProfileScreen() {
               className={`flex-1 py-2.5 items-center rounded-full ${activeTab === 'joined' ? 'bg-white' : ''}`}
               style={activeTab === 'joined' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
-              <Text className={`font-bold ${activeTab === 'joined' ? 'text-zinc-900' : 'text-zinc-500'}`}>
-                Upcoming ({joinedActivities.length})
+              <Text className={`font-bold text-xs ${activeTab === 'joined' ? 'text-zinc-900' : 'text-zinc-500'}`}>
+                Upcoming
               </Text>
             </TouchableOpacity>
             
@@ -140,8 +147,18 @@ export default function ProfileScreen() {
               className={`flex-1 py-2.5 items-center rounded-full ${activeTab === 'organized' ? 'bg-white' : ''}`}
               style={activeTab === 'organized' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
             >
-              <Text className={`font-bold ${activeTab === 'organized' ? 'text-zinc-900' : 'text-zinc-500'}`}>
-                Organized ({organizedActivities.length})
+              <Text className={`font-bold text-xs ${activeTab === 'organized' ? 'text-zinc-900' : 'text-zinc-500'}`}>
+                Organized
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => setActiveTab('history')}
+              className={`flex-1 py-2.5 items-center rounded-full ${activeTab === 'history' ? 'bg-white' : ''}`}
+              style={activeTab === 'history' ? { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 } : undefined}
+            >
+              <Text className={`font-bold text-xs ${activeTab === 'history' ? 'text-zinc-900' : 'text-zinc-500'}`}>
+                History
               </Text>
             </TouchableOpacity>
           </View>
@@ -155,12 +172,14 @@ export default function ProfileScreen() {
                 <ActivityIcon size={32} color="#a1a1aa" />
               </View>
               <Text className="text-zinc-800 font-extrabold text-center text-lg mb-1.5">
-                No {activeTab === 'joined' ? 'upcoming' : 'organized'} games
+                {activeTab === 'history' ? 'No past games' : `No ${activeTab} games`}
               </Text>
               <Text className="text-zinc-500 text-center text-sm font-medium leading-5">
                 {activeTab === 'joined' 
                   ? "You haven't joined any games yet. Head to the Discover feed to find your next match!" 
-                  : "You haven't organized any games. Tap Create to host your own match and invite players."}
+                  : activeTab === 'organized' 
+                    ? "You haven't organized any games. Tap Create to host your own match and invite players."
+                    : "You don't have any past games in your history yet."}
               </Text>
             </View>
           ) : (

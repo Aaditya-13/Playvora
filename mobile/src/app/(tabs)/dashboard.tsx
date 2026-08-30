@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
+import React from 'react';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { Bell, Calendar, Zap, CheckCircle2 } from 'lucide-react-native';
 
 import { ActivityCard } from '../../components/activity/ActivityCard';
-import { Activity } from '../../types/activity';
 import { useDashboard } from '../../hooks/queries/useDashboard';
 
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { data, isLoading, isError, refetch } = useDashboard();
-  const [activeTab, setActiveTab] = useState<'organizing' | 'joined'>('organizing');
 
   if (isLoading) {
     return (
@@ -33,48 +31,85 @@ export default function DashboardScreen() {
     );
   }
 
-  const activities = activeTab === 'organizing' ? data.data.upcomingCreated : data.data.upcomingJoined;
+  const { actionableRequests, upcomingCreated, upcomingJoined } = data.data;
+
+  // Merge, deduplicate, and sort all upcoming activities by date
+  const allUpcoming = [...upcomingCreated, ...upcomingJoined]
+    .filter((v, i, a) => a.findIndex(t => t._id === v._id) === i)
+    .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
+    .slice(0, 5); // Take top 5 soonest games
 
   return (
-    <View className="flex-1 bg-zinc-50" style={{ paddingTop: insets.top }}>
-      <View className="px-4 py-4">
-        <Text className="text-3xl font-extrabold text-zinc-900">My Games</Text>
-        <Text className="text-zinc-500 mt-1 text-base">Track your upcoming and past activities</Text>
+    <View className="flex-1 bg-zinc-50">
+      {/* Header */}
+      <View className="bg-zinc-50 px-5 pb-4" style={{ paddingTop: insets.top + 16 }}>
+        <Text className="text-zinc-900 text-3xl font-black mb-1">Action Center</Text>
+        <Text className="text-zinc-500 text-sm font-medium">Your hub for immediate attention</Text>
       </View>
 
-      {/* Tabs */}
-      <View className="flex-row px-4 mb-4">
-        <TouchableOpacity 
-          onPress={() => setActiveTab('organizing')}
-          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'organizing' ? 'border-emerald-500' : 'border-zinc-200'}`}
-        >
-          <Text className={`font-bold ${activeTab === 'organizing' ? 'text-emerald-500' : 'text-zinc-500'}`}>Organizing</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => setActiveTab('joined')}
-          className={`flex-1 items-center py-3 border-b-2 ${activeTab === 'joined' ? 'border-emerald-500' : 'border-zinc-200'}`}
-        >
-          <Text className={`font-bold ${activeTab === 'joined' ? 'text-emerald-500' : 'text-zinc-500'}`}>Joined</Text>
-        </TouchableOpacity>
-      </View>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+        
+        <View className="px-5 mt-2 mb-6">
+          {actionableRequests > 0 ? (
+            <TouchableOpacity 
+              onPress={() => router.push('/(tabs)/profile')}
+              className="bg-orange-50 p-5 rounded-3xl border border-orange-200 flex-row items-center justify-between"
+              style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }}
+            >
+              <View className="flex-row items-center gap-4 flex-1">
+                <View className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-sm">
+                  <Bell size={24} color="#f97316" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-orange-950 font-bold text-lg mb-0.5">
+                    {actionableRequests} Pending {actionableRequests === 1 ? 'Request' : 'Requests'}
+                  </Text>
+                  <Text className="text-orange-700/80 text-sm font-medium">
+                    Players are waiting for your approval to join your games.
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <View className="bg-emerald-50 p-5 rounded-3xl border border-emerald-100 flex-row items-center gap-4">
+               <View className="w-12 h-12 bg-white rounded-full items-center justify-center shadow-sm">
+                  <CheckCircle2 size={24} color="#10b981" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-emerald-950 font-bold text-lg mb-0.5">All caught up!</Text>
+                  <Text className="text-emerald-700/80 text-sm font-medium">No pending requests to approve.</Text>
+                </View>
+            </View>
+          )}
+        </View>
 
-      <FlashList
-        data={activities}
-        renderItem={({ item }) => (
-          <ActivityCard 
-            activity={item as Activity} 
-            onPress={() => router.push(`/activity/${(item as Activity)._id}` as any)} 
-          />
-        )}
-        // @ts-expect-error FlashList React 19 typing
-        estimatedItemSize={250}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
-        ListEmptyComponent={
-          <View className="items-center justify-center pt-20">
-            <Text className="text-zinc-500 text-lg font-medium">No {activeTab} games found.</Text>
-          </View>
-        }
-      />
+        <View className="px-5 mb-4 flex-row items-center gap-2">
+          <Zap size={20} color="#3f3f46" fill="#3f3f46" />
+          <Text className="text-xl font-bold text-zinc-900">Happening Soon</Text>
+        </View>
+
+        <View className="px-1">
+          {allUpcoming.length === 0 ? (
+            <View className="items-center justify-center py-10 px-5 mx-4 border-2 border-dashed border-zinc-200 rounded-3xl">
+              <Calendar size={32} color="#a1a1aa" className="mb-3" />
+              <Text className="text-zinc-600 font-bold text-center text-lg mb-1">
+                No upcoming games
+              </Text>
+              <Text className="text-zinc-400 text-center text-sm">
+                You don't have any games coming up soon. 
+              </Text>
+            </View>
+          ) : (
+            allUpcoming.map(activity => (
+              <ActivityCard 
+                key={activity._id} 
+                activity={activity} 
+                onPress={() => router.push(`/activity/${activity._id}` as any)} 
+              />
+            ))
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }
